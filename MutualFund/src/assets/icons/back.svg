@@ -1,0 +1,15 @@
+<?xml version="1.0" standalone="yes"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24">
+<path style="fill:#010101; stroke:none;" d="M0 0L0 24L24 24L24 0L0 0z"/>
+<path style="fill:#cf1210; stroke:none;" d="M8 5L9 6L8 5z"/>
+<path style="fill:#cf130d; stroke:none;" d="M9 5C5.42924 10.1617 3.2916 15.6274 11 18L8 13L20 12L20 11L8 11L11 5L9 5z"/>
+<path style="fill:#cb110c; stroke:none;" d="M8 6L9 7L8 6z"/>
+<path style="fill:#cf1210; stroke:none;" d="M10 6L9 8L10 6z"/>
+<path style="fill:#c71109; stroke:none;" d="M10 7L11 8L10 7z"/>
+<path style="fill:#cf1210; stroke:none;" d="M6 8L7 9L6 8z"/>
+<path style="fill:#cb110c; stroke:none;" d="M9 8L10 9L9 8M5 9L6 10L5 9z"/>
+<path style="fill:#cf1210; stroke:none;" d="M4 10L5 11L4 10M4.33333 12.6667L4.66667 13.3333L4.33333 12.6667M19 12L20 13L19 12z"/>
+<path style="fill:#cb110c; stroke:none;" d="M5 14L6 15L5 14M6 15L7 16L6 15M9 15L10 16L9 15z"/>
+<path style="fill:#c71109; stroke:none;" d="M10 16L11 17L10 16z"/>
+<path style="fill:#cf1210; stroke:none;" d="M8 18L8 19L11 19L8 18z"/>
+</svg>
