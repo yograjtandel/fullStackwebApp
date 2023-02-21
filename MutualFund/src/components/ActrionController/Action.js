@@ -1,5 +1,4 @@
 import React from "react";
-import action from "../../assets/icons/action.svg";
 
 import useActions from "../../hooks/use-actions";
 

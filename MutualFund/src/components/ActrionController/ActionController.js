@@ -1,12 +1,8 @@
 import React, { useState } from "react";
 
 import Pagination from "./Pagination";
-import Action from "./Action";
 import Filter from "./Filter";
 import Groupby from "./GroupBy";
-import FormViewButton from "./FormViewButton";
-
-import search from "../../assets/icons/search.svg";
 
 const ActionConreoller = (props) => {
   const [ActionDropdownOpen, setActionDropdownOpen] = useState(false);
@@ -14,7 +10,7 @@ const ActionConreoller = (props) => {
   const [GroupByDropdownOpen, setGroupByDropdownOpen] = useState(false);
 
   const ActionClickHandler = (event) => {
-    event.stopPropagation();
+    event.stopPropagation();    
     setFilterDropdownOpen(false);
     setGroupByDropdownOpen(false);
     setActionDropdownOpen((prev) => !prev);

@@ -1,5 +1,5 @@
 import React from "react";
-import Select, { components, NonceProvider } from "react-select";
+import Select from "react-select";
 
 const Selection = (props1) => {
   //   const { ValueContainer, Placeholder } = components;
@@ -37,21 +37,24 @@ const Selection = (props1) => {
   //     : {};
   const ReadonlyBackgroundColor = props1.isReadOnly
     ? {
-        background: "#e9ecef",
         opacity: 1,
-        border: "1px solid #ced4da",
-        color: "#212529",
+        // border: "1px solid #ced4da",
+        // color: "#212529",
+        border: "none",
+        borderBottom: "1px solid #757575",
+        background: "transparent",
+        color: "#999"
       }
     : {};
 
   const controlFocus = props1.hasError
     ? {
-        boxShadow: "0 0 0 0.18rem rgba(244, 67, 54, 0.30)",
+        boxShadow: "0px 9px 10px -4px rgba(244, 67, 54, 0.30)",
         borderColor: "rgba(244, 67, 54, 0.30)",
       }
     : {
         "&:focus-within,&:focus": {
-          boxShadow: "0 0 0 0.18rem rgb(13 110 253 / 25%)",
+          boxShadow: "0px 9px 10px -4px rgb(13 110 253 / 25%)",
         },
       };
   //   const labelBackground = !props1.isReadOnly
@@ -79,7 +82,7 @@ const Selection = (props1) => {
 
   const Indicator = props1.isReadOnly ? { display: "none" } : {};
   const spacing = {
-    controlHeight: 31,
+    controlHeight: 39,
     baseUnit: 0,
   };
 
@@ -106,8 +109,12 @@ const Selection = (props1) => {
       placeholder={props1.placeholder}
       theme={(theme) => ({
         ...theme,
-        borderRadius: "0.25rem",
-        border: "1px solid",
+        // borderRadius: "0.25rem",
+        // border: "1px solid",
+        border: "none",
+        borderBottom: "1px solid #757575",
+        background: "transparent",
+        color: "#999",
         // colors: { ...theme.colors, ...TheamColor },
         spacing: {
           ...theme.spacing,
@@ -119,6 +126,11 @@ const Selection = (props1) => {
           ...provided,
           fontSize: "1rem",
           padding: "0.125rem 0.625rem",
+          border: "none",
+          borderBottom: "1px solid #757575",
+          background: "transparent",
+          color: "#999",
+          borderRadius: 0,
           ...controlFocus,
           ...ReadonlyBackgroundColor,
         }),
@@ -144,6 +156,10 @@ const Selection = (props1) => {
           ...provided,
           ...Indicator,
         }),
+        indicatorSeparator: (provided, state) => ({
+            ...provided,
+            display:"none"
+          }),
         // placeholder: (provided, state) => ({
         //   ...provided,
         //   ...labelBackground,

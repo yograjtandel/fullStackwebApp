@@ -5,9 +5,10 @@ import { DigitOnlyValidation } from "../components/Form/validations/validations"
 const useInput = (args) => {
   const [inputValue, setInputValue] = useState(args.defaultValue);
   const [IsTouched, setIsTouched] = useState(false);
-  const valueIsValid = args.validateValue
-    ? args.validateValue(inputValue || "", IsTouched)
-    : true;
+  const valueIsValid =
+    args.validateValue && IsTouched
+      ? args.validateValue(inputValue || "")
+      : true;
   const hasError = !valueIsValid && IsTouched;
   const valueChangeHandler = (event) => {
     setIsTouched(true);

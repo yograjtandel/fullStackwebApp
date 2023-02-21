@@ -1,5 +1,4 @@
 import React from "react";
-import filter from "../../assets/icons/filter.svg";
 
 const Filter = (props) => {
   const FilterClickHandler = (event) => {

@@ -16,10 +16,12 @@ const usePanVarify = async (pan) => {
         },
       }
     );
+
     if (res.ok) {
         return await res.json();
     } else {
         alert("pan number is not valid");
+        return res;
     }
   } catch (err) {
     return alert("there is some error");

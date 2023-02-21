@@ -8,14 +8,19 @@ const Nominee = require("../models/nominee");
 
 exports.getUseList = (req, res) => {
   console.log("get list called");
-  User.findAll({ include: "auth" }).then((data) => {
-    if (!data) {
-      const error = new Error("No user Found");
-      error.statusCode = 404;
-      throw error;
-    }
-    res.json({ users: data });
-  });
+  KYCDetail.findAll()
+    .then((data) => {
+      if (!data) {
+        const error = new Error("No user Found");
+        error.statusCode = 404;
+        throw error;
+      }
+      console.log(data);
+      res.json({ users: data });
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 };
 
 exports.CreateInvester = (req, res, next) => {

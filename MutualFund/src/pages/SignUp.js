@@ -1,15 +1,13 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import Logo from "../assets/web-asset/images/login-logo-2.png";
-import AuthContext from "../store/AuthContext";
 import UseNotificationManager from "../hooks/use-notification-manager";
 import { RoutPath } from "../data/Paths";
 
 import useActions from "../hooks/use-actions";
 
 const SignUp = () => {
-  const AuthCtx = useContext(AuthContext);
   const [NotificationList, setNotificationList] = useState([]);
   const notificationList = UseNotificationManager(
     NotificationList,
@@ -24,7 +22,6 @@ const SignUp = () => {
 
   const OnSignup = async (event) => {
     event.preventDefault();
-    debugger
     const res = await useActions("post", "auth/signup", false, {
       user_name: event.target.user_name.value,
       email: event.target.email.value,
@@ -60,53 +57,53 @@ const SignUp = () => {
             </div>
             <div className="col-md-6 col-sm-12 ">
               <form onSubmit={OnSignup}>
-                <h4 class="h3 mb-3">Let’s Sign up</h4>
-                <div class="mb-3">
+                <h4 className="h3 mb-3">Let’s Sign up</h4>
+                <div className="mb-3">
                   <input
                     type="text"
-                    class="form-control"
+                    className="form-control"
                     id="user_name"
                     placeholder="User Name"
                   />
                   {/* <!-- <label for="floatingInput">Name</label> --> */}
                 </div>
-                <div class="mb-3">
+                <div className="mb-3">
                   <input
                     type="email"
-                    class="form-control"
+                    className="form-control"
                     id="email"
                     placeholder="name@example.com"
                   />
                   {/* <!-- <label for="floatingInput">Email address</label> --> */}
                 </div>
-                <div class="mb-3">
+                <div className="mb-3">
                   <input
                     type="string"
-                    class="form-control"
+                    className="form-control"
                     id="mobile"
                     placeholder="Mobile No.*"
                   />
                 </div>
-                <div class="mb-3">
+                <div className="mb-3">
                   <input
                     type="password"
-                    class="form-control"
+                    className="form-control"
                     id="password"
                     placeholder="Password"
                   />
                 </div>
-                <div class="mb-3">
+                <div className="mb-3">
                   <input
                     type="password"
-                    class="form-control"
+                    className="form-control"
                     id="ConfirmPassword"
                     placeholder="Confirm Password"
                   />
                 </div>
-                <div class="form-content d-flex justify-content-between flex-wrap">
-                  <div class="checkbox mb-3">
-                    <label class="forget-pwd">
-                      <span class="fa fa-exclamation-circle icon"></span>{" "}
+                <div className="form-content d-flex justify-content-between flex-wrap">
+                  <div className="checkbox mb-3">
+                    <label className="forget-pwd">
+                      <span className="fa fa-exclamation-circle icon"></span>{" "}
                       Already register
                       <Link
                         to={`../${RoutPath.Login}`}
@@ -116,7 +113,7 @@ const SignUp = () => {
                       </Link>
                     </label>
                   </div>
-                  <button class="custom-btn" type="submit">
+                  <button className="custom-btn" type="submit">
                     Sign Up
                   </button>
                 </div>

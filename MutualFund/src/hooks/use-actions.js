@@ -1,7 +1,5 @@
 import { EndPoint } from "../data/EndPoint";
 
-import getCookie from "./Use-CSRF";
-
 const useActions = async (action, model, ids, data, queryParams) => {
   // const AuthCtx = useContext(AuthContext);
   // const useActions = async (args) => {
@@ -24,9 +22,10 @@ const useActions = async (action, model, ids, data, queryParams) => {
   if (!keys && !parems) {
     url = url + "/";
   }
+  
   switch (action) {
     case "get":
-      const responce = await fetch(url, {
+      let responce = await fetch(url, {
         method: "GET",
         headers: {
           "Content-Type": "Application/Json",
@@ -34,6 +33,7 @@ const useActions = async (action, model, ids, data, queryParams) => {
           Authorization: Authorization,
         },
       });
+      debugger
       if (responce.ok) {
         return await responce.json();
       } else {
@@ -42,11 +42,8 @@ const useActions = async (action, model, ids, data, queryParams) => {
         });
         return { ok: responce.ok };
       }
-      break;
     case "post":
       try {
-debugger
-
         const createres = await fetch(url, {
           method: "post",
           body: JSON.stringify(data),
@@ -56,7 +53,6 @@ debugger
             //   'X-CSRFToken': CSRF
           },
         });
-debugger
 
         return createres;
       } catch (err) {
@@ -108,7 +104,6 @@ debugger
       //       console.log(err);
       //     });
       //   }
-      break;
     default:
       responce = false;
   }

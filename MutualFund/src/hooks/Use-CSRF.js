@@ -1,5 +1,4 @@
 const getCookie = (name) => {
-    debugger
     var cookieValue = null;
     if (document.cookie && document.cookie !== '') {
         var cookies = document.cookie.split(';');

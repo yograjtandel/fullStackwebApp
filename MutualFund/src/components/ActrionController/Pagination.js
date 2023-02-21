@@ -1,8 +1,5 @@
 import React, { useState, useEffect } from "react";
 
-import SvgArrowLeft from "../../assets/iconComponents/ArrowLeft";
-import SvgArrowRight from "../../assets/iconComponents/ArrowRight";
-
 const Pagination = (props) => {
   const [rangeInputValue, setrangeInputValue] = useState("");
   const [curentPage, setcurentPage] = useState(1);

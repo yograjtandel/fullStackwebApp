@@ -1,5 +1,4 @@
 import React, { useContext, useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
 
 import "./assets/scss/style.css";
 import "react-datepicker/dist/react-datepicker.css";
@@ -12,18 +11,13 @@ import ClientList from "./pages/ClientList";
 
 import { RoutPath } from "./data/Paths";
 
-import FormContext from "./store/FormContext";
 import AuthContext from "./store/AuthContext";
 
 import RootLayout from "./components/UI/RootLayout";
-import Loader from "./assets/web-asset/loading.gif";
-import Loader_1 from "./assets/web-asset/loading-1.gif";
 import SignUp from "./pages/SignUp";
 
 function App(props) {
-  const ctx = useContext(FormContext);
   const authCtx = useContext(AuthContext);
-  const location = useLocation();
   const [Loading, setLoading] = useState(true);
   const [Token, setToken] = useState(true);
 
@@ -31,13 +25,6 @@ function App(props) {
     setToken(authCtx.Token);
     setLoading(false);
   }, [authCtx.Token]);
-
-  const loader = (
-    <div className="gif-loader-wrapper h-100 w-100 d-flex justify-content-center align-items-center bg-transparent ">
-      <img className="loader" src={Loader} height={100}></img>
-      <img className="loader" src={Loader_1} height={100}></img>
-    </div>
-  );
 
   if (Loading) {
     return <h1>Loading from app....</h1>;

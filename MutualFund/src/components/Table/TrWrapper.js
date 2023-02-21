@@ -1,18 +1,15 @@
-import React, { useState, useContext, } from "react";
+import React, { useContext, } from "react";
 import { useNavigate } from "react-router-dom";
-import uuid from "react-uuid";
 
 import FormContext from "../../store/FormContext";
 import ActiveModelContext from "../../store/ActiveModelContext";
 
 const TrWrapper = (props) => {
-  const [check, setcheck] = useState(false);
+
   const FormCtx = useContext(FormContext);
   const ActiveModelCtx = useContext(ActiveModelContext);
   let navigate = useNavigate();
-  const onChangeHandler = () => {
-    setcheck((prev) => !prev);
-  };
+
 
   const onRecordClick = (event) => {
     event.stopPropagation();

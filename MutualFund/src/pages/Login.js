@@ -1,15 +1,13 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import Logo from "../assets/web-asset/images/login-logo-2.png";
 import AuthContext from "../store/AuthContext";
 import UseNotificationManager from "../hooks/use-notification-manager";
 import { RoutPath } from "../data/Paths";
-import { EndPoint } from "../data/EndPoint";
+
 
 const Login = () => {
-  const [TableData, setTableData] = useState([]);
-
   const AuthCtx = useContext(AuthContext);
   const [NotificationList, setNotificationList] = useState([]);
   const notificationList = UseNotificationManager(

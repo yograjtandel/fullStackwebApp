@@ -13,15 +13,17 @@ export const UserTypeList = [
 ];
 
 export const GenderList = [
-  { value: "0" },
-  { value: "M", label: "Male" },
-  { value: "F", label: "Female" },
-  { value: "O", label: "Other" },
+  { value: "0", label: "Gender" },
+  { value: "MALE", label: "Male" },
+  { value: "FEMALE", label: "Female" },
+  { value: "OTHERS", label: "Other" },
 ];
 
 export const MaritalStatusLis = [
-  { value: "S", label: "Single" },
-  { value: "M", label: "Married" },
+  { value: "SINGLE", label: "Single" },
+  { value: "MARRIED", label: "Married" },
+  { value: "OTHERS", label: "Other" },
+
   // { value: "D", label: "Divorced" },
   // { value: "W", label: "Widowed" },
 ];
@@ -35,28 +37,39 @@ export const BloodGroupList = [
   { value: "ab+", label: "AB+" },
   { value: "ab-", label: "AB-" },
 ];
+
 export const OccupationList = [
-  { value: "01", label: "Business" },
-  { value: "02", label: "Services" },
-  { value: "03", label: "Professional" },
-  { value: "04", label: "Agriculture" },
-  { value: "05", label: "Retired" },
-  { value: "06", label: "Housewife" },
-  { value: "07", label: "Student" },
-  { value: "08", label: "Others" },
-  { value: "09", label: "Doctor" },
-  { value: "41", label: "Private Sector Service" },
-  { value: "42", label: "Public Sector Service" },
-  { value: "43", label: "Forex Dealer" },
-  { value: "44", label: "Government Service" },
-  { value: "99", label: "Unknown/ Not Applicable" },
+  { value: "AGRICULTURE", label: "Agriculture" },
+  { value: "BUSINESS", label: "Business" },
+  { value: "DOCTOR", label: "Doctor" },
+  { value: "FOREX_DEALER", label: " Forex Dealer" },
+  { value: "GOVERNMENT_SERVICE", label: "Government Service " },
+  { value: "HOUSE_WIFE", label: "Housewife" },
+  { value: "OTHERS", label: "Others" },
+  { value: "PRIVATE_SECTOR_SERVICE", label: "Private Sector Service" },
+  { value: "PROFESSIONAL", label: " Professional" },
+  { value: "PUBLIC_SECTOR_SERVICE", label: "Public Sector Service" },
+  { value: "RETIRED", label: "Retired" },
+  { value: "SERVICE", label: " Services" },
+  { value: "STUDENT", label: "Student" },
+];
+
+export const SourceofWealthList = [
+  { value: "SALARY", label: "SALARY" },
+  { value: "BUSINESS", label: "BUSINESS" },
+  { value: "GIFT", label: "GIFT" },
+  { value: "ANCESTRAL_PROPERTY", label: "ANCESTRAL_PROPERTY" },
+  { value: "RENTAL_INCOME", label: "RENTAL_INCOME" },
+  { value: "PRIZE_MONEY", label: "PRIZE_MONEY" },
+  { value: "ROYALTY", label: "ROYALTY" },
+  { value: "OTHERS", label: "OTHERS" },
 ];
 
 export const AccountTypeList = [
-  { value: "SB", label: "Savings" },
-  { value: "CB", label: "Current" },
-  { value: "NE", label: "NRE" },
-  { value: "NO", label: "NRO" },
+  { value: "SAVINGS", label: "Savings" },
+  { value: "CURRENT", label: "Current" },
+  { value: "NRE", label: "NRE" },
+  { value: "NRO", label: "NRO" },
 ];
 
 export const ClientNomineeRelationList = [
