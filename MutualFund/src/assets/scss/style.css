@@ -6032,7 +6032,8 @@ footer.policy-footer .footer-top a ::hover {
 .style1 .group .bar {
   position: relative;
   display: block;
-  width: 300px;
+  width: 100%;
+  z-index: 999;
 }
 .style1 .group .bar:before,
 .style1 .group .bar:after {
@@ -6045,6 +6046,7 @@ footer.policy-footer .footer-top a ::hover {
   transition: 0.2s ease all;
   -moz-transition: 0.2s ease all;
   -webkit-transition: 0.2s ease all;
+  z-index: 999;
 }
 .style1 .group .bar:before {
   left: 50%;

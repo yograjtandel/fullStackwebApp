@@ -31,6 +31,7 @@ export const AuthContextProvider = (props) => {
       let response = await useActions("post", RoutPath.RefreshToken, false, {
         refresh: refreshToken,
       });
+
       let data = await response.json();
 
       if (response.status === 200) {
@@ -92,25 +93,31 @@ export const AuthContextProvider = (props) => {
   // this is possible because localstorage is syncronus api
   // by doing this we are not override any state
   useEffect(() => {
-    let fourMinutes = 1000 * 60 * 1;
+    let Minutes = 1000 * 60 * 60;
 
-    let interval = setInterval(async () => {
-      if (Token) {
-        const data = await updateToken();
-        if (data) {
-          setToken(data);
-          // setUser(jwt_decode(data.access));
-          localStorage.setItem("token", JSON.stringify(data));
+    let interval = setInterval(
+      async () => {
+        console.log("timeout call");
+        if (Token) {
+          const data = await updateToken();
+          if (data) {
+            setToken(data);
+            // setUser(jwt_decode(data.access));
+            localStorage.setItem("token", JSON.stringify(data));
+          }
         }
-      }
-    }, fourMinutes, Token);
-
+      },
+      Minutes,
+      Token
+    );
     const setData = async () => {
       const token = localStorage.getItem("token");
       const email = localStorage.getItem("email");
       if (token) {
+        debugger;
         if (Loading) {
           const data = await updateToken(token);
+          debugger;
           if (data) {
             setToken(data);
             // setUser(jwt_decode(data.access));
@@ -120,6 +127,7 @@ export const AuthContextProvider = (props) => {
         } else {
           setToken(token);
           setEmail(email);
+          debugger;
           if (location.pathname !== RoutPath.Login) {
             navigate(location.pathname);
           } else {
@@ -127,12 +135,12 @@ export const AuthContextProvider = (props) => {
           }
         }
       } else {
-        // if (Object.values(RoutPath).includes(location.pathname)) {
-        //   navigate(`${RoutPath.Login}`);
-        // } else {
+        if (Object.values(RoutPath).includes(location.pathname)) {
+          navigate(`${RoutPath.Login}`);
+        } else {
           navigate(location.pathname);
         }
-    //   }
+      }
     };
 
     setData();

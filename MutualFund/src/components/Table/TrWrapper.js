@@ -2,12 +2,10 @@ import React, { useContext, } from "react";
 import { useNavigate } from "react-router-dom";
 
 import FormContext from "../../store/FormContext";
-import ActiveModelContext from "../../store/ActiveModelContext";
 
 const TrWrapper = (props) => {
 
   const FormCtx = useContext(FormContext);
-  const ActiveModelCtx = useContext(ActiveModelContext);
   let navigate = useNavigate();
 
 
@@ -15,7 +13,7 @@ const TrWrapper = (props) => {
     event.stopPropagation();
     FormCtx.setActiveMode("read");
     FormCtx.setActiveRecord(props.data);
-    const path = props.to ? props.to : ActiveModelCtx.route
+    const path = props.to;
     navigate("../" + path);
   };
 

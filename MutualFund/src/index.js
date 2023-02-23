@@ -7,7 +7,6 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.min.js";
 import { BurgerMenuContextProvider } from "./store/BurgerMenuContext";
 import { FormContextProvider } from "./store/FormContext";
-import { ActiveModelContextProvider } from "./store/ActiveModelContext";
 // import { ActiveFilterContextProvider } from "./store/ActiveFundFilterContext";
 import { AuthContextProvider } from "./store/AuthContext";
 
@@ -19,7 +18,6 @@ root.render(
   <React.StrictMode>
     <BrowserRouter>
       <BurgerMenuContextProvider>
-        <ActiveModelContextProvider>
           <FormContextProvider>
             {/* <ActiveFilterContextProvider> */}
               <AuthContextProvider>
@@ -27,7 +25,6 @@ root.render(
               </AuthContextProvider>
             {/* </ActiveFilterContextProvider> */}
           </FormContextProvider>
-        </ActiveModelContextProvider>
       </BurgerMenuContextProvider>
     </BrowserRouter>
   </React.StrictMode>

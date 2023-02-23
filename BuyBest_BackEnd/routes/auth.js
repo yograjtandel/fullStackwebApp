@@ -49,6 +49,7 @@ router.post(
   authController.login
 );
 
-router.post("/update_password", authController.UpdatePassword);
+router.post("/update_password", isAuth, authController.UpdatePassword);
+router.post("/update_refreshtoken", isAuth, authController.UpdateRefreshToken);
 
 module.exports = router;

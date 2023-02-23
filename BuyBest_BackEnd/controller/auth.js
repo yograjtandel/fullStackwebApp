@@ -2,7 +2,9 @@ const { validationResult } = require("express-validator/check");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
+const config = require("../config/authConfig");
 const Auth = require("../models/auth");
+const RefreshToken = require("../models/refreshToken");
 
 exports.createUser = (req, res, next) => {
   const errors = validationResult(req);
@@ -55,14 +57,26 @@ exports.login = (req, res, next) => {
         error.statusCode = 401;
         throw error;
       }
-      res.status(200).json({
-        email: LoadedUser.email,
-        token: jwt.sign(
-          { email: LoadedUser.email, userId: LoadedUser.id.toString() },
-          "MySecret",
-          { expiresIn: "30min" }
-        ),
-      });
+
+      const getRefreshToken = async () => {
+        const refresh_tokn = await RefreshToken.createToken(LoadedUser);
+        const token = {
+          access: jwt.sign(
+            { email: LoadedUser.email, userId: LoadedUser.id.toString() },
+            config.secret,
+            { expiresIn: config.jwtExpiration }
+          ),
+          refresh: refresh_tokn,
+        };
+        res.status(200).json({
+          email: LoadedUser.email,
+          token: token,
+        });
+      };
+      getRefreshToken();
+      //   const refresh_tokn = RefreshToken.createToken(LoadedUser).then((token) => {
+      //     return token;
+      //   });
     })
     .catch((err) => {
       if (!err.statusCode) {
@@ -79,7 +93,27 @@ exports.UpdatePassword = (req, res, next) => {
       return Auth.update({ password: hashedPw }, { where: { id: req.userId } });
     })
     .then((auth) => {
-        console.log(auth);
       res.json({ message: "PASSWORD is updated" });
     });
+};
+
+exports.UpdateRefreshToken = (req, res, next) => {
+  RefreshToken.verifyExpiration(req.userId).then((valid) => {
+    if (valid) {
+      Auth.findOne({ where: { id: req.userId } }).then((userDoc) => {
+        const token = {
+          access: jwt.sign(
+            { email: userDoc.email, userId: userDoc.id.toString() },
+            config.secret,
+            { expiresIn: config.jwtExpiration }
+          ),
+          refresh: req.body.refresh,
+        };
+        res.status(200).json({
+          email: userDoc.email,
+          token: token,
+        });
+      });
+    }
+  });
 };

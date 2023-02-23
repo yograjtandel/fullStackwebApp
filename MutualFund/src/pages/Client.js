@@ -7,9 +7,7 @@ import useInput from "../hooks/use-Input";
 import usePanVarify from "../hooks/use-pan-varify";
 import UseNotificationManager from "../hooks/use-notification-manager";
 import useActions from "../hooks/use-actions";
-import UseAddress from "../hooks/use-address";
 
-import { CreateClientTabList } from "../data/TabList";
 import {
   AccountTypeList,
   GenderList,
@@ -24,7 +22,6 @@ import { DropdownCityList } from "../data/CityList";
 
 import {
   requerFieldValidation,
-  EmailValidation,
   requerSelectionValidation,
   DigitOnlyValidation,
   IsPastDate,
@@ -38,35 +35,22 @@ import {
   LessThenEqualtoValidation,
 } from "../components/Form/validations/validations";
 
-import {
-  emailFieldValidation,
-  mobileFieldValidation,
-} from "../components/Form/validations/fieldsValidation";
-
 import FormContext from "../store/FormContext";
 import { RoutPath } from "../data/Paths";
-import { Models } from "../data/Models";
 
 const Client = () => {
   const [FocusPan, setFocusPan] = useState(false);
   const [PanData, setPanData] = useState(false);
 
-  const [ClientCode, setClientCode] = useState();
   const [StateList, setStateList] = useState(stateList);
   const [CityList, setCityList] = useState([]);
-  const [DefaultAddress, setDefaultAddress] = useState({});
-
-  const [DmatInEditMode, setDmatInEditMode] = useState("");
-  const [DmatInfoList, setDmatInfoList] = useState([]);
 
   const [FocusBank, setFocusBank] = useState(false);
   const [EditBankAcNo, setEditBankAcNo] = useState(false);
 
-  const [IsHomeAddressPrimary, setIsHomeAddressPrimary] = useState(true);
   const [IsBankAcPrimary, setIsBankAcPrimary] = useState(true);
   const [BankInEditMode, setBankInEditMode] = useState("");
   const [BankInfoList, setBankInfoList] = useState([]);
-  const [visibleTab, setVisibleTab] = useState(CreateClientTabList[0].id);
   const [ontificationList, setontificationList] = useState([]);
 
   const [NomineeList, setNomineeList] = useState([]);
@@ -79,7 +63,6 @@ const Client = () => {
   const PepRelatedRef = useRef();
   const PepvExposedRef = useRef();
 
-  const { fetchState, fetchCity } = UseAddress();
   const formContext = useContext(FormContext);
   const notificationList = UseNotificationManager(
     ontificationList,
@@ -91,28 +74,6 @@ const Client = () => {
   const read = formContext.mode === "read";
 
   useEffect(() => {
-    const set_state = async (country, state) => {
-      const list = await fetchState(country);
-      setStateList((prev) => list);
-      setDefaultAddress((prev) => {
-        return {
-          ...prev,
-          State: list.filter((item) => item.value === state)[0],
-        };
-      });
-    };
-
-    const set_city = async (state, city) => {
-      const list = await fetchCity(state);
-      setCityList(list);
-      setDefaultAddress((prev) => {
-        return {
-          ...prev,
-          City: list.filter((item) => item.value === city)[0],
-        };
-      });
-    };
-
     formContext.setActiveview("form");
     // formContext.setActiveMode("save");
     if (FocusPan) {
@@ -235,7 +196,7 @@ const Client = () => {
     inputBlurHandler: genderonBlure,
     SetInputValue: Setgender,
   } = useInput({
-    defaultValue: { value: "0" },
+    defaultValue: { value: "0" , label: "Gender"},
     validateValue: (value) => requerSelectionValidation(value),
   });
 
@@ -247,7 +208,7 @@ const Client = () => {
     inputBlurHandler: statusonBlure,
     SetInputValue: Setstatus,
   } = useInput({
-    defaultValue: { value: "0" },
+    defaultValue: { value: "0", label: "Status" },
     validateValue: (value) => requerSelectionValidation(value),
   });
 
@@ -259,7 +220,7 @@ const Client = () => {
     inputBlurHandler: ResidentialStatusonBlure,
     SetInputValue: SetResidentialStatus,
   } = useInput({
-    defaultValue: { value: "0" },
+    defaultValue: { value: "0", label: "ResidentialStatus" },
     validateValue: (value) => requerSelectionValidation(value),
   });
 
@@ -271,7 +232,7 @@ const Client = () => {
     inputBlurHandler: OccupationonBlure,
     SetInputValue: SetOccupation,
   } = useInput({
-    defaultValue: { value: "0" },
+    defaultValue: { value: "0", label: "Occupation" },
     validateValue: (value) => requerSelectionValidation(value),
   });
 
@@ -283,7 +244,7 @@ const Client = () => {
     inputBlurHandler: SourceofWealthonBlure,
     SetInputValue: SetSourceofWealth,
   } = useInput({
-    defaultValue: { value: "0" },
+    defaultValue: { value: "0" , label: "Source of Wealth"},
     validateValue: (value) => requerSelectionValidation(value),
   });
 
@@ -394,30 +355,13 @@ const Client = () => {
   };
 
   const EditPanClickHandler = () => {
-    if (visibleTab === 1) {
-      setPanData(false);
-      SetfirstName("");
-      Setgender({ value: "0", label: "" });
       setFocusPan(true);
-    } else {
-      setFocusPan(true);
-    }
   };
   //   bank tab validation
 
   const IsBankAcPrimaryChange = () => {
     setIsBankAcPrimary((prev) => !prev);
   };
-
-  const {
-    inputValue: BankName,
-    isvalid: BankNameIsvalid,
-    hasError: BankNameHasError,
-    valueChangeHandler: BankNameonChange,
-    inputBlurHandler: BankNameonBlure,
-    SetInputValue: setBankName,
-    reset: resetBankName,
-  } = useInput({ defaultValue: "" });
 
   const {
     inputValue: AccountNumber,
@@ -465,19 +409,22 @@ const Client = () => {
     SetInputValue: setAccountType,
     reset: resetAccountType,
   } = useInput({
-    defaultValue: { value: "SAVINGS", label: "Savings" },
-    validateValue: (value) => requerSelectionValidation(value),
+    defaultValue: { value: "0", label: "Account Type" },
+    validateValue: requerSelectionValidation,
   });
 
-  const {
-    inputValue: BankCity,
-    // isvalid: BankCityIsvalid,
-    // hasError: BankCityHasError,
-    valueChangeHandler: BankCityonChange,
-    inputBlurHandler: BankCityonBlure,
-    SetInputValue: setBankCity,
-    reset: resetBankCity,
-  } = useInput({ defaultValue: "" });
+//   const {
+//     inputValue: NomineeIsMy,
+//     isvalid: NomineeIsMyIsvalid,
+//     hasError: NomineeIsMyHasError,
+//     valueChangeHandler: NomineeIsMyonChange,
+//     inputBlurHandler: NomineeIsMyonBlure,
+//     SetInputValue: setNomineeIsMy,
+//     reset: resetNomineeIsMy,
+//   } = useInput({
+//     defaultValue: { value: "0", label: "Relationship" },
+//     validateValue: requerSelectionValidation,
+//   });
 
   const {
     inputValue: IFSC,
@@ -496,8 +443,6 @@ const Client = () => {
   const fetchBankDetail = async (value) => {
     const res = await fetch("https://ifsc.razorpay.com/" + value);
     const data = await res.json();
-    setBankName(data.BANK);
-    setBankCity(data.CITY);
   };
 
   const EditBankAcNumberClickHandler = () => {
@@ -507,8 +452,6 @@ const Client = () => {
     resetIFSC();
     resetAccountNumber();
     resetAccountType({ value: "SAVINGS", label: "Savings" });
-    resetBankName();
-    resetBankCity();
     setIsBankAcPrimary(false);
     setBankInEditMode("");
   };
@@ -516,47 +459,50 @@ const Client = () => {
   const calcBankIsACtive = (bankISPrimary = false) => {
     const List = [...BankInfoList];
     if (List.length) {
-      //   if (BankInEditMode !== "") {
-      //     const curPrimaryBankIndex = List.findIndex(
-      //             (bank) => bank.isPrimary === true
-      //           );
-      //     if(curPrimaryBankIndex !== BankInEditMode && List[BankInEditMode].isPrimary) {
-      //         List[curPrimaryBankIndex].isPrimary = false;
-      //     }
-      //     // if (bankISPrimary) {
-      //     //   const curPrimaryBankIndex = List.findIndex(
-      //     //     (bank) => bank.isPrimary === true
-      //     //   );
-      //     //   if(BankInEditMode !== curPrimaryBankIndex) {
-      //     //     List[curPrimaryBankIndex].isPrimary = false;
-      //     //   }
-      //     // }
-      //     return [List];
-      //   } else {
-      const curPrimaryBankIndex = List.findIndex(
-        (bank) => bank.isPrimary === true
-      );
-      if (curPrimaryBankIndex !== BankInEditMode && IsBankAcPrimary) {
-        List[curPrimaryBankIndex].isPrimary = false;
-        if (BankInEditMode !== "") {
-          List[BankInEditMode].isPrimary = IsBankAcPrimary;
-        }
-        return [List, true];
-      } else {
+      if (BankInEditMode !== "") {
+        const curPrimaryBankIndex = List.findIndex(
+          (bank) => bank.isPrimary === true
+        );
         if (
-          curPrimaryBankIndex === BankInEditMode &&
-          IsBankAcPrimary === false
+          curPrimaryBankIndex !== BankInEditMode &&
+          List[BankInEditMode].isPrimary
         ) {
-          setontificationList((prev) => [
-            ...prev,
-            { msg: "there shoud atleast one primary Bank!" },
-          ]);
-          return [List, false];
+          List[curPrimaryBankIndex].isPrimary = false;
         }
-        return [List, true];
+        // if (bankISPrimary) {
+        //   const curPrimaryBankIndex = List.findIndex(
+        //     (bank) => bank.isPrimary === true
+        //   );
+        //   if(BankInEditMode !== curPrimaryBankIndex) {
+        //     List[curPrimaryBankIndex].isPrimary = false;
+        //   }
+        // }
+        return [List];
+      } else {
+        const curPrimaryBankIndex = List.findIndex(
+          (bank) => bank.isPrimary === true
+        );
+        if (curPrimaryBankIndex !== BankInEditMode && IsBankAcPrimary) {
+          List[curPrimaryBankIndex].isPrimary = false;
+          if (BankInEditMode !== "") {
+            List[BankInEditMode].isPrimary = IsBankAcPrimary;
+          }
+          return [List, true];
+        } else {
+          if (
+            curPrimaryBankIndex === BankInEditMode &&
+            IsBankAcPrimary === false
+          ) {
+            setontificationList((prev) => [
+              ...prev,
+              { msg: "there shoud atleast one primary Bank!" },
+            ]);
+            return [List, false];
+          }
+          return [List, true];
+        }
       }
     }
-    // }
     return [List];
   };
   const checkBankAxist = () => {
@@ -600,7 +546,7 @@ const Client = () => {
         number: AccountNumber,
         ifsc_code: IFSC,
         primary_account: IsBankAcPrimary ? 1 : 0,
-      },    
+      },
     ];
     setBankInfoList(List);
     resetBankForm();
@@ -613,8 +559,6 @@ const Client = () => {
     setAccountNumber(record["account_number"]);
     // setConfimAccountNumber(record["account_number"])
     setAccountType(record["account_type"]);
-    setBankName(record["name"]);
-    setBankCity(record["branch_city"]);
     setIsBankAcPrimary(record["isPrimary"]);
   };
 
@@ -744,7 +688,7 @@ const Client = () => {
     SetInputValue: setNomineeIsMy,
     reset: resetNomineeIsMy,
   } = useInput({
-    defaultValue: { value: "0" },
+    defaultValue: { value: "0", label: "Relationship" },
     validateValue: requerSelectionValidation,
   });
 
@@ -891,8 +835,6 @@ const Client = () => {
   const tab1IsValid = true;
   const tab2IsValid = true;
   const tab3IsValid = true;
-  const tab4IsValid = true;
-  const tab5IsValid = true;
 
   const FormIsValid =
     tab1IsValid &&
@@ -903,7 +845,6 @@ const Client = () => {
 
   const submitHandler = async (event) => {
     event.preventDefault();
-    const dob = new Date(DOB);
     if (FormIsValid) {
       if (NomineeTotalShare < 100) {
         setontificationList((prev) => [
@@ -917,20 +858,20 @@ const Client = () => {
         return { ...nominee };
       });
 
-    //   const NomineeDetail = nomineeList.map((nominee) => {
-    //     const Nominee = {
-    //       nomineeDetail: {
-    //         first_name: nominee.name,
-    //         date_of_birth: nominee.date_of_birth,
-    //         client_nominee_relation: nominee.relationship.label,
-    //         share_appicable: nominee.allocation_percentage,
-    //       },
-    //     };
-    //     if (edit) {
-    //       Nominee.nomineeDetail["id"] = nominee.id;
-    //     }
-    //     return Nominee;
-    //   });
+      //   const NomineeDetail = nomineeList.map((nominee) => {
+      //     const Nominee = {
+      //       nomineeDetail: {
+      //         first_name: nominee.name,
+      //         date_of_birth: nominee.date_of_birth,
+      //         client_nominee_relation: nominee.relationship.label,
+      //         share_appicable: nominee.allocation_percentage,
+      //       },
+      //     };
+      //     if (edit) {
+      //       Nominee.nomineeDetail["id"] = nominee.id;
+      //     }
+      //     return Nominee;
+      //   });
 
       // if (edit) {
       //   PersonalDetail["client_code"] = ClientCode;
@@ -939,11 +880,10 @@ const Client = () => {
         return { ...item };
       });
       const BankDetail = temp.map((item) => {
-        debugger
         item["type"] = item["type"].value;
         return item;
       });
-      
+
       const FormData = {
         perm_addr_is_corres_addr: 1,
         skip_nomination: 0,
@@ -971,7 +911,6 @@ const Client = () => {
         bank_accounts: BankDetail,
         nomination: nomineeList,
       };
-debugger
       if (create) {
         const CreateRes = await useActions(
           "post",
@@ -979,7 +918,6 @@ debugger
           false,
           FormData
         );
-        debugger
         if (CreateRes.ok) {
           const newRecord = await CreateRes.json();
           formContext.setActiveRecord(newRecord);
@@ -1530,7 +1468,7 @@ debugger
                                 <input
                                   name="IFSC"
                                   type="text"
-                                  className={`form-control ${
+                                  className={`${
                                     IFSCHasError ||
                                     (!IFSCIsvalid && BankInfoList.length === 0)
                                       ? "invalid"
@@ -1569,7 +1507,7 @@ debugger
                                   Primary Account
                                 </label>
                               </div>
-                              <div class="mb-0 px-2 ">
+                              <div className="mb-0 px-2 ">
                                 {BankInEditMode.length === 0 && (
                                   <button
                                     type="button"
@@ -1632,7 +1570,7 @@ debugger
                               <div className="group">
                                 <input
                                   type="text"
-                                  className={`form-control ${
+                                  className={`${
                                     NomineeFirstNameHasError ||
                                     (!NomineeFirstNameIsvalid &&
                                       NomineeList.length === 0)
@@ -1656,7 +1594,7 @@ debugger
                                   name="NomineeDOB"
                                   type="date"
                                   value={NomineeDOB}
-                                  className={`form-control ${
+                                  className={` ${
                                     NomineeDOBHasError ||
                                     (!NomineeDOBIsvalid &&
                                       NomineeList.length === 0)
@@ -1699,7 +1637,7 @@ debugger
                                 <input
                                   type="text"
                                   name="PercentageofShare"
-                                  className={`form-control ${
+                                  className={` ${
                                     PercentageofShareHasError ||
                                     (!PercentageofShareIsvalid &&
                                       NomineeList.length === 0)
@@ -1719,7 +1657,7 @@ debugger
                             </div>
                             <div className="col-md-4"></div>
                             <div className="col-md-4 d-flex flex-column">
-                              <div class="mb-0 px-2 ">
+                              <div className="mb-0 px-2 ">
                                 {!isNomineeUPdateMode && (
                                   <button
                                     type="button"

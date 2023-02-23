@@ -20,10 +20,11 @@ function App(props) {
   const authCtx = useContext(AuthContext);
   const [Loading, setLoading] = useState(true);
   const [Token, setToken] = useState(true);
-
   useEffect(() => {
     setToken(authCtx.Token);
     setLoading(false);
+    console.log(authCtx);
+
   }, [authCtx.Token]);
 
   if (Loading) {
@@ -35,17 +36,6 @@ function App(props) {
   if (!Token) {
     return (
       <main className={`${"h-100 w-100"}`}>
-        {/* {loader} */}
-        {/* {location.pathname !== RoutPath.Login && <h1>le le Loading....</h1>} */}
-        {/* <Routes>
-          {!Token && <Route path="/login" element={<Login />} />}
-
-          <Route element={<Temp />}>
-            <Route path="/404" element={<Page404 />} />
-            <Route path="*" element={<Page404 />} />
-            <Route path="*" element={<h1> lele Loading....</h1>} />
-          </Route>
-        </Routes> */}
         {!Token && (
           <Routes path={RoutPath.Home}>
             <Route index element={<Login />} />

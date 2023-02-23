@@ -1,31 +1,43 @@
-const jwt = require('jsonwebtoken');
+const jwt = require("jsonwebtoken");
+
+const authConfig = require("../config/authConfig");
+const RefreshToken = require("../models/refreshToken");
 
 module.exports = (req, res, next) => {
-  const authHeader = req.get('Authorization');
+  const authHeader = req.get("Authorization");
   if (!authHeader) {
-    const error = new Error('Not authenticated.');
+    const error = new Error("Not authenticated.");
     error.statusCode = 401;
     throw error;
   }
-  const token = authHeader.split(' ')[1];
+  const access = authHeader.split(" ")[1];
+  const refhresh = authHeader.split(" ")[2];
+
   let decodedToken;
-  console.log("token="+token)
   try {
-    decodedToken = jwt.verify(token, "MySecret");
-  console.log("decodedToken="+decodedToken)
-} catch (err) {
+    decodedToken = jwt.verify(access, authConfig.secret);
+  } catch (err) {
     err.statusCode = 500;
-  console.log("err="+err)
-  throw err;
+    console.log("err=" + err);
+    throw err;
   }
+
   if (!decodedToken) {
-    const error = new Error('Not authenticated.');
+    const error = new Error("Not authenticated.");
     error.statusCode = 401;
-  console.log("error="+error)
-  throw error;
+    throw error;
   }
-  console.log("req.userId="+req.userId)
-  console.log("+decodedToken.userId="+decodedToken.userId)
+  RefreshToken.verifyExpiration(+decodedToken.userId).then((valid) => {
+    if (!valid) {
+      RefreshToken.findOne({ where: { token: refhresh } }).then((doc) => {
+        RefreshToken.destroy({ where: { id: doc.id } });
+        res.status(403).json({
+          message:
+            "Refresh token was expired. Please make a new signin request",
+        });
+      });
+    }
+  });
   req.userId = +decodedToken.userId;
   next();
 };

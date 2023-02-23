@@ -12,6 +12,7 @@ const FatcaDetail = require("./models/fatca_detail");
 const KYCDetail = require("./models/kyc_detail");
 const Nominee = require("./models/nominee");
 const User = require("./models/user");
+const RefreshToken = require("./models/refreshToken");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -36,6 +37,8 @@ app.use((error, req, res, next) => {
   res.status(status).json({ message: message, data: data });
 });
 
+Auth.hasOne(RefreshToken);
+RefreshToken.belongsTo(Auth);
 Auth.hasOne(User);
 User.belongsTo(Auth);
 Auth.hasOne(Address);

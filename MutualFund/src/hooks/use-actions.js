@@ -6,7 +6,7 @@ const useActions = async (action, model, ids, data, queryParams) => {
   const keys = ids ? "/" + ids : "";
   const parems = queryParams ? queryParams : "";
   const Token = localStorage.getItem("token");
-  let Authorization = Token ? "Bearer " + JSON.parse(Token)["token"] : false;
+  let Authorization = Token ? "Bearer " + JSON.parse(Token)["token"].access + " " +  JSON.parse(Token)["token"].refresh: false;
   //   let CSRF = getCookie("csrftoken");
 
   let url = EndPoint + model;
@@ -22,7 +22,7 @@ const useActions = async (action, model, ids, data, queryParams) => {
   if (!keys && !parems) {
     url = url + "/";
   }
-  
+
   switch (action) {
     case "get":
       let responce = await fetch(url, {
@@ -33,7 +33,6 @@ const useActions = async (action, model, ids, data, queryParams) => {
           Authorization: Authorization,
         },
       });
-      debugger
       if (responce.ok) {
         return await responce.json();
       } else {

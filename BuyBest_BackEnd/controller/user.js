@@ -7,7 +7,6 @@ const KYCDetail = require("../models/kyc_detail");
 const Nominee = require("../models/nominee");
 
 exports.getUseList = (req, res) => {
-  console.log("get list called");
   KYCDetail.findAll()
     .then((data) => {
       if (!data) {
@@ -15,7 +14,6 @@ exports.getUseList = (req, res) => {
         error.statusCode = 404;
         throw error;
       }
-      console.log(data);
       res.json({ users: data });
     })
     .catch((err) => {
