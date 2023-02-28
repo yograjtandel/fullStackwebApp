@@ -23,7 +23,7 @@ RefreshToken.createToken = async function (user) {
       let expiredAt = new Date();
 
       expiredAt.setSeconds(
-        expiredAt.getSeconds() + config.jwtRefreshExpiration
+        expiredAt.getSeconds() + config.jwtConfig.jwtRefreshExpiration
       );
 
       let _token = uuidv4();
@@ -61,7 +61,7 @@ RefreshToken.verifyExpiration = async (user_id) => {
   const validity = await RefreshToken.findOne({
     where: { authId: user_id },
   }).then((Doc) => {
-    return Doc.expiryDate.getTime() > new Date().getTime();
+    return { validity : Doc.expiryDate.getTime() > new Date().getTime(), doc: Doc};
   });
   return validity;
 };

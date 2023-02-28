@@ -6,9 +6,13 @@ const useActions = async (action, model, ids, data, queryParams) => {
   const keys = ids ? "/" + ids : "";
   const parems = queryParams ? queryParams : "";
   const Token = localStorage.getItem("token");
-  let Authorization = Token ? "Bearer " + JSON.parse(Token)["token"].access + " " +  JSON.parse(Token)["token"].refresh: false;
+  let Authorization = Token
+    ? "Bearer " +
+      JSON.parse(Token)["token"].access +
+      " " +
+      JSON.parse(Token)["token"].refresh
+    : false;
   //   let CSRF = getCookie("csrftoken");
-
   let url = EndPoint + model;
 
   if (keys) {
@@ -96,13 +100,13 @@ const useActions = async (action, model, ids, data, queryParams) => {
         },
       });
       return PutResponce;
-      //   if (PutResponce.ok) {
-      //     return await PutResponce.json();
-      //   } else {
-      //     PutResponce.json().then((err) => {
-      //       console.log(err);
-      //     });
-      //   }
+    //   if (PutResponce.ok) {
+    //     return await PutResponce.json();
+    //   } else {
+    //     PutResponce.json().then((err) => {
+    //       console.log(err);
+    //     });
+    //   }
     default:
       responce = false;
   }

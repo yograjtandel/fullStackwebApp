@@ -5,6 +5,16 @@ export const TempList = [
   { value: 3, label: "4" },
 ];
 
+export const ResidentialStatusList = [
+  {
+    value: "RESIDENT_INDIVIDUAL",
+    label: "RESIDENT INDIVIDUAL",
+  },
+  {
+    value: "NON_RESIDENT_INDIVIDUAL",
+    label: "NON RESIDENT INDIVIDUAL",
+  },
+];
 export const UserTypeList = [
   { value: 0, label: "User" },
   { value: 1, label: "Client" },

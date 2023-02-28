@@ -15,6 +15,7 @@ import {
   OccupationList,
   ClientNomineeRelationList,
   SourceofWealthList,
+  ResidentialStatusList,
 } from "../data/DropDownList";
 
 import { stateList } from "../data/StateList";
@@ -83,54 +84,134 @@ const Client = () => {
       BankRef.current.focus();
     }
 
-    // if (read || edit) {
-    //   const record = formContext.Activerecord;
-    //   const HomeAddress = record.address[0];
-    //   const OfficeAddress = record.address[1];
-    //   const guardianAddress =
-    //     record.uccholder.length > 0 ? record.uccholder[0].address[0] : false;
+    if (read || edit) {
+      const record = formContext.Activerecord;
+      // email: "test@test.com";
+      // mobile: "1234567890";
 
-    //   set_state(
-    //     HomeAddress.country,
-    //     HomeAddress.state,
-    //     OfficeAddress ? OfficeAddress.country : false,
-    //     OfficeAddress ? OfficeAddress.state : false,
-    //     guardianAddress ? guardianAddress.country : false,
-    //     guardianAddress ? guardianAddress.state : false
-    //   );
-    //   set_city(
-    //     HomeAddress.state,
-    //     HomeAddress.city,
-    //     OfficeAddress ? OfficeAddress.state : false,
-    //     OfficeAddress ? OfficeAddress.city : false,
-    //     guardianAddress ? guardianAddress.state : false,
-    //     guardianAddress ? guardianAddress.city : false
-    //   );
-    //   setDefaultAddress((prev) => {
-    //     return {
-    //       ...prev,
-    //       id: HomeAddress.id,
-    //       Address1: HomeAddress.address1,
-    //       Address2: HomeAddress.address2,
-    //       Address3: HomeAddress.address3,
-    //       Pincode: HomeAddress.pincode,
-    //       Phone: HomeAddress.phone,
-    //     };
-    //   });
+      // user: authId: 1;
+      // createdAt: "2023-02-23T05:24:10.000Z";
+      // id: 1;
+      // perm_addr_is_corres_addr: true;
+      // skip_nomination: false;
+      // updatedAt: "2023-02-23T05:24:10.000Z";
 
-    //   setBankInfoList([...record.bank]);
-    //   setDmatInfoList(record.demat);
-    //   setNomineeList(record.nominee);
-    //   setClientCode(record.client_code);
-    //   SetfirstName(record.first_name);
-    //   Setgender(record.gender);
-    //   SetDOB(record.date_of_birth, "date");
-    //   SetOccupation(
-    //     OccupationList.filter((item) => item.value === record.occupation_code)
-    //   );
-    //   SetPan(record.pan_number);
-    //   Setstatus(record.marital_status);
-    // }
+      // KYCDetail:
+      //   authId: 1;
+      // country_of_citizenship_ansi_code: "IN";
+      // createdAt: "2023-02-23T05:24:10.000Z";
+      // date_of_birth: "2023-02-10T00:00:00.000Z";
+      // gender: "";
+      // id: 1;
+      // marital_status: "SINGLE";
+      // name: "yograj";
+      // occupation: "AGRICULTURE";
+      // pan_number: "bmept5658q";
+      // pep_exposed: false;
+      // pep_related: false;
+      // residential_status: "RESIDENT_INDIVIDUAL";
+      // updatedAt: "2023-02-23T05:24:10.000Z";
+      if (record.KYCDetail) {
+        SetfirstName(record.KYCDetail.name);
+        const gender = GenderList.filter(
+          (item) => item.value === record.KYCDetail.gender
+        );
+
+        const residential_status = ResidentialStatusList.filter(
+          (item) => item.value === record.KYCDetail.residential_status
+        );
+
+        const occupation = OccupationList.filter(
+          (item) => item.value === record.KYCDetail.occupation
+        );
+
+        const MaritalStatus = MaritalStatusLis.filter(
+          (item) => item.value === record.KYCDetail.marital_status
+        );
+        Setgender(gender.length ? gender : { value: "0", label: "Gender" });
+        SetDOB(record.KYCDetail.date_of_birth, "date");
+        SetResidentialStatus(
+          residential_status.length
+            ? residential_status
+            : { value: "0", label: "Residential Status" }
+        );
+        SetOccupation(
+          occupation.length ? occupation : { value: "0", label: "Gender" }
+        );
+        SetPan(record.KYCDetail.pan_number);
+        Setstatus(
+          MaritalStatus.length
+            ? MaritalStatus
+            : { value: "0", label: "MaritalStatus" }
+        );
+      } else {
+        formContext.setActiveMode("save");
+      }
+      // Address:
+      // authId: 1;
+      // city: "WANKANER";
+      // country_ansi_code: "IN";
+      // createdAt: "2023-02-23T05:24:10.000Z";
+      // id: 1;
+      // line1: "12381, sector 2-A";
+      // pincode: "119898";
+      // state: "Gujarat";
+      // updatedAt: "2023-02-23T05:24:10.000Z";
+      if (record.Address) {
+        SetLine1(record.Address.line1);
+        SetPincode(record.Address.pincode);
+        SetCity(CityList.filter((item) => item.value === record.Address.city));
+        SetState(
+          StateList.filter((item) => item.value === record.Address.state)
+        );
+      }
+
+      // FatcaDetail: authId: 1;
+      // country_of_birth_ansi_code: "IN";
+      // createdAt: "2023-02-23T05:24:10.000Z";
+      // gross_annual_income: 100000;
+      // id: 1;
+      // no_other_tax_residences: true;
+      // source_of_wealth: "SALARY";
+      // updatedAt: "2023-02-23T05:24:10.000Z";
+      if (record.FatcaDetail) {
+        SetGrossAnnualIncome(record.FatcaDetail.gross_annual_income);
+        SetSourceofWealth(
+          SourceofWealthList.filter(
+            (item) => item.value === record.FatcaDetail.source_of_wealth
+          )
+        );
+      }
+
+      //     Banks:
+      //     [
+      //         {authId: 1;
+      //     createdAt: "2023-02-23T05:24:10.000Z";
+      //     id: 1;
+      //     ifsc_code: "323223";
+      //     number: "12345679";
+      //     primary_account: true;
+      //     type: "SAVINGS";
+      //     updatedAt: "2023-02-23T05:24:10.000Z";}
+      // ]
+
+      // Nominees:
+      //  allocation_percentage: 100;
+      // authId: 1;
+      // createdAt: "2023-02-23T05:24:10.000Z";
+      // date_of_birth: "2023-02-03T00:00:00.000Z";
+      // id: 1;
+      // name: "csed";
+      // relationship: "Father";
+      // updatedAt: "2023-02-23T05:24:10.000Z";
+
+      if (record.Banks) {
+        setBankInfoList(record.Banks);
+      }
+      if (record.Nominees) {
+        setNomineeList(record.Nominees);
+      }
+    }
     return () => {
       setFocusPan(false);
       setFocusBank(false);
@@ -196,8 +277,15 @@ const Client = () => {
     inputBlurHandler: genderonBlure,
     SetInputValue: Setgender,
   } = useInput({
-    defaultValue: { value: "0" , label: "Gender"},
-    validateValue: (value) => requerSelectionValidation(value),
+    defaultValue: { value: "0", label: "Gender" },
+    validateValue: (value) => {
+      console.log("value==", value);
+      console.log(
+        "requerSelectionValidation(value)==",
+        requerSelectionValidation(value)
+      );
+      return requerSelectionValidation(value);
+    },
   });
 
   const {
@@ -244,7 +332,7 @@ const Client = () => {
     inputBlurHandler: SourceofWealthonBlure,
     SetInputValue: SetSourceofWealth,
   } = useInput({
-    defaultValue: { value: "0" , label: "Source of Wealth"},
+    defaultValue: { value: "0", label: "Source of Wealth" },
     validateValue: (value) => requerSelectionValidation(value),
   });
 
@@ -355,7 +443,7 @@ const Client = () => {
   };
 
   const EditPanClickHandler = () => {
-      setFocusPan(true);
+    setFocusPan(true);
   };
   //   bank tab validation
 
@@ -413,18 +501,18 @@ const Client = () => {
     validateValue: requerSelectionValidation,
   });
 
-//   const {
-//     inputValue: NomineeIsMy,
-//     isvalid: NomineeIsMyIsvalid,
-//     hasError: NomineeIsMyHasError,
-//     valueChangeHandler: NomineeIsMyonChange,
-//     inputBlurHandler: NomineeIsMyonBlure,
-//     SetInputValue: setNomineeIsMy,
-//     reset: resetNomineeIsMy,
-//   } = useInput({
-//     defaultValue: { value: "0", label: "Relationship" },
-//     validateValue: requerSelectionValidation,
-//   });
+  //   const {
+  //     inputValue: NomineeIsMy,
+  //     isvalid: NomineeIsMyIsvalid,
+  //     hasError: NomineeIsMyHasError,
+  //     valueChangeHandler: NomineeIsMyonChange,
+  //     inputBlurHandler: NomineeIsMyonBlure,
+  //     SetInputValue: setNomineeIsMy,
+  //     reset: resetNomineeIsMy,
+  //   } = useInput({
+  //     defaultValue: { value: "0", label: "Relationship" },
+  //     validateValue: requerSelectionValidation,
+  //   });
 
   const {
     inputValue: IFSC,
@@ -779,62 +867,77 @@ const Client = () => {
     );
   });
 
-  //   const tab1IsValid = !read
-  //     ? branchIsvalid &&
-  //       referenceIsvalid &&
-  //       DistributorIsvalid &&
-  //       SuperDistributorIsvalid &&
-  //       PanData &&
-  //       PanIsvalid &&
-  //       MobileIsvalid &&
-  //       // (Aadhar.length ===0 || (Aadhar.length > 0 && AadharIsvalid)) &&
-  //       AadharIsvalid &&
-  //       AddharIsVarified &&
-  //       EmailIsvalid &&
-  //       DOBIsvalid &&
-  //       BirthYearAsPan &&
-  //       DOB.getFullYear() === parseInt(BirthYearAsPan) &&
-  //       (gender ? genderIsvalid : true) &&
-  //       statusIsvalid
-  //     : // ((status.value ==="M") || status.value ==="S")
-  //       true;
+  //   {
+  //     perm_addr_is_corres_addr: 1,
+  //     skip_nomination: 0,
+  //     kyc_identity_detail: {
+  //       name: firstName,
+  //       pan_number: Pan,
+  //       date_of_birth: DOB,
+  //       gender: gender.value,
+  //       marital_status: status.value,
+  //       residential_status: ResidentialStatus.value,
+  //       occupation: Occupation.value,
+  //       pep_exposed: false,
+  //       pep_related: false,
+  //     },
+  //     fatca_detail: {
+  //       source_of_wealth: SourceofWealth.value,
+  //       gross_annual_income: GrossAnnualIncome,
+  //     },
+  //     correspondence_address: {
+  //       line1: Line1,
+  //       city: City.label,
+  //       state: State.label,
+  //       pincode: Pincode,
+  //     },
+  //     bank_accounts: BankDetail,
+  //     nomination: nomineeList,
+  //   }
+  const tab1IsValid = !read
+    ? firstNameIsvalid &&
+      PanData &&
+      PanIsvalid &&
+      DOBIsvalid &&
+      genderIsvalid &&
+      statusIsvalid &&
+      OccupationIsvalid
+    : //     pep_exposed: false,
+      //     pep_related: false,
+      true;
 
-  //   const tab2IsValid = !read
-  //     ? AddressValidation.Address1 &&
-  //       AddressValidation.Address2 &&
-  //       AddressValidation.Pincode &&
-  //       AddressValidation.Country &&
-  //       AddressValidation.State &&
-  //       AddressValidation.City &&
-  //     : true;
+  //   console.log("firstName=", firstName);
+  //   console.log("PanData=", PanData);
+  //   console.log("PanIsvalid=", PanIsvalid);
+  //   console.log("DOBIsvalid=", DOBIsvalid);
+  //   console.log("genderIsvalid=", genderIsvalid);
+  //   console.log("statusIsvalid=", statusIsvalid);
+  //   console.log("OccupationIsvalid=", OccupationIsvalid);
 
-  //   const tab3IsValid = !read
-  //     ? dmateIsRequer
-  //       ? DpIdIsvalid && BeneficiaryAcNoIsvalid
-  //       : true
-  //     : true;
+  const tab2IsValid = !read
+    ? SourceofWealthIsvalid && GrossAnnualIncomeIsvalid
+    : true;
 
-  //   const tab4IsValid = !read
-  //     ? IFSCIsvalid &&
-  //       AccountNumberIsvalid &&
-  //       AccountTypeIsvalid &&
-  //       (ConfimAccountNumberIsvalid ||
-  //         (BankInEditMode.length !== 0 && !EditBankAcNo)) &&
-  //       (AccountNumber === ConfimAccountNumber ||
-  //         (BankInEditMode.length !== 0 && !EditBankAcNo))
-  //     : //   BankInfoList.length !== 0
-  //       true;
+  const tab3IsValid = !read
+    ? Line1Isvalid && PincodeIsvalid && StateIsvalid && CityIsvalid
+    : true;
 
-  //   const tab5IsValid = !read
-  //     ? NomineeFirstNameIsvalid && NomineeDOBIsvalid && NomineeIsMyIsvalid
-  //     : // NomineeIDProofValid &&
-  //       // NomineeAadharIsvalid &&
-  //       // NomineeAadhar !== Aadhar &&
-  //       true;
+  const tab4IsValid = !read
+    ? IFSCIsvalid && AccountNumberIsvalid && AccountTypeIsvalid
+    : true;
 
-  const tab1IsValid = true;
-  const tab2IsValid = true;
-  const tab3IsValid = true;
+  // {
+  //     name: NomineeFirstName,
+  //     date_of_birth: NomineeDOB,
+  //     relationship: NomineeIsMy.label,
+  //     allocation_percentage: PercentageofShare,
+  //   }
+  const tab5IsValid = !read
+    ? NomineeFirstNameIsvalid &&
+      NomineeDOBIsvalid &&
+      NomineeIsMyIsvalid &&
+      PercentageofShareIsvalid
+    : true;
 
   const FormIsValid =
     tab1IsValid &&
@@ -904,8 +1007,8 @@ const Client = () => {
         },
         correspondence_address: {
           line1: Line1,
-          city: City.label,
-          state: State.label,
+          city: City.value,
+          state: State.value,
           pincode: Pincode,
         },
         bank_accounts: BankDetail,
@@ -914,7 +1017,7 @@ const Client = () => {
       if (create) {
         const CreateRes = await useActions(
           "post",
-          "user/create_invester",
+          "user/create_investor",
           false,
           FormData
         );
@@ -931,32 +1034,28 @@ const Client = () => {
       //   const nomineelist = NomineeDetail.map((nominee) => ({
       //     ...nominee.nomineeDetail,
       //   }));
-      //   if (edit) {
-      //     const updated_data = {
-      //       id: formContext.Activerecord.id,
-      //       ...PersonalDetail,
-      //       demat: DmatInfoList,
-      //       nominee: nomineelist,
-      //       uccholder: [],
-      //     };
-      //     const putRes = await useActions(
-      //       "put",
-      //       Models.Updateclient,
-      //       formContext.Activerecord.id,
-      //       JSON.stringify(updated_data)
-      //     );
-      //     if (putRes.ok) {
-      //       const updated_record = await putRes.json();
-      //       formContext.setActiveRecord(updated_record);
-      //       formContext.setActiveMode("read");
-      //     } else {
-      //       putRes.json().then((err) => {
-      //         console.log(err);
-      //       });
-      //     }
-      //     //   formContext.setActiveMode("read");
-      //     //   formContext.setActiveRecord(Editres);
-      //   }
+      if (edit) {
+        FormData["id"] = formContext.Activerecord.id;
+        const putRes = await useActions(
+          "put",
+          "user/update_investor",
+          false,
+          FormData
+        );
+        
+        if (putRes.ok) {
+          const updated_record = await putRes.json();
+          debugger
+          formContext.setActiveRecord(updated_record.data);
+          formContext.setActiveMode("read");
+        } else {
+          putRes.json().then((err) => {
+            console.log(err);
+          });
+        }
+        //   formContext.setActiveMode("read");
+        //   formContext.setActiveRecord(Editres);
+      }
     } else {
       console.log("form is not valid");
     }
@@ -1048,6 +1147,7 @@ const Client = () => {
                               type="button"
                               className={`custom-btn update-btn px-2 py-1 ms-1 font-12 mb-4`}
                               onClick={varifyPanClickHandler}
+                              disabled={read}
                             >
                               Verify
                             </button>
@@ -1057,6 +1157,7 @@ const Client = () => {
                               type="button"
                               className={`custom-btn update-btn px-2 py-1 ms-1 font-12 mb-4`}
                               onClick={EditPanClickHandler}
+                              disabled={read}
                             >
                               Edit
                             </button>
@@ -1068,6 +1169,7 @@ const Client = () => {
                               name="dob"
                               type="Date"
                               placeholder="none"
+                              value={DOB}
                               className={`${
                                 DOBHasError || !DOBIsvalid ? "invalid" : ""
                               }`}
@@ -1088,6 +1190,7 @@ const Client = () => {
                               options={GenderList}
                               Searchable="true"
                               id="Gender"
+                              hasError={genderHasError || !genderIsvalid}
                               value={gender}
                               onChange={genderonChange}
                               onBlur={genderonBlure}
@@ -1114,16 +1217,7 @@ const Client = () => {
                         <div className="col-md-4">
                           <div className="group">
                             <Selection
-                              options={[
-                                {
-                                  value: "RESIDENT_INDIVIDUAL",
-                                  label: "RESIDENT INDIVIDUAL",
-                                },
-                                {
-                                  value: "NON_RESIDENT_INDIVIDUAL",
-                                  label: "NON RESIDENT INDIVIDUAL",
-                                },
-                              ]}
+                              options={ResidentialStatusList}
                               Searchable="true"
                               id="ResidentialStatus"
                               hasError={
@@ -1513,7 +1607,7 @@ const Client = () => {
                                     type="button"
                                     className=" custom-btn pspl-btn d-block w-100"
                                     onClick={onAddBankHandler}
-                                    disabled={read}
+                                    disabled={read || tab4IsValid}
                                   >
                                     Add
                                   </button>
@@ -1524,7 +1618,7 @@ const Client = () => {
                                     type="button"
                                     className=" custom-btn pspl-btn d-block w-100"
                                     onClick={BankDetailUpdateClick}
-                                    disabled={read}
+                                    disabled={read || tab4IsValid}
                                   >
                                     Update{" "}
                                   </button>
@@ -1663,7 +1757,7 @@ const Client = () => {
                                     type="button"
                                     className=" custom-btn pspl-btn d-block w-100"
                                     onClick={onAddNomineeHandler}
-                                    disabled={read}
+                                    disabled={read || tab5IsValid}
                                   >
                                     Add
                                   </button>
@@ -1674,7 +1768,7 @@ const Client = () => {
                                     type="button"
                                     className=" custom-btn pspl-btn d-block w-100"
                                     onClick={NomineeDetailUpdateClick}
-                                    disabled={read}
+                                    disabled={read || tab5IsValid}
                                   >
                                     Update{" "}
                                   </button>

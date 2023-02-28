@@ -46,7 +46,6 @@ const ClientList = () => {
 
       list = EmployeemasterList_body.users;
     } else {
-        debugger
       if (EmployeemasterList_body.users.length === 0) {
         setNoData(true);
       }
@@ -60,14 +59,14 @@ const ClientList = () => {
     FormCtx.setActiveMode(false);
 
     fetchUserList();
-  },[]);
+  }, []);
 
   const trList = UserList.map((item) => {
     return (
       <Tr
         data={item}
         key={uuid()}
-        col={["name", "date_of_birth", "pan_number"]}
+        col={["email", "mobile"]}
       />
     );
   });
@@ -107,7 +106,6 @@ const ClientList = () => {
                   <tr>
                     <th scope="col">Name</th>
                     <th scope="col">DOB</th>
-                    <th scope="col">Pan</th>
                   </tr>
                 </thead>
                 <tbody>

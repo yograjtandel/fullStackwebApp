@@ -11,6 +11,8 @@ const useInput = (args) => {
       : true;
   const hasError = !valueIsValid && IsTouched;
   const valueChangeHandler = (event) => {
+    console.log("event==========");
+    console.log(event);
     setIsTouched(true);
     if (event) {
       if (event.target) {
@@ -57,8 +59,11 @@ const useInput = (args) => {
 
   const SetInputValue = (value, type) => {
     if (type === "date") {
-      value = new Date(value);
+      // value =  new Date();
+      //   value = new Date().toISOString().split("T")[0];
+      value = value.substring(0, 10);
     }
+
     setInputValue(value);
   };
   const reset = (value) => {

@@ -6,6 +6,15 @@ const config = require("../config/authConfig");
 const Auth = require("../models/auth");
 const RefreshToken = require("../models/refreshToken");
 
+const nodemailer = require("nodemailer");
+const sendgridTransport = require("nodemailer-sendgrid-transport");
+
+const transport = nodemailer.createTransport(
+  sendgridTransport({
+    auth: { api_key: config.MailApiKey },
+  })
+);
+
 exports.createUser = (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -27,6 +36,19 @@ exports.createUser = (req, res, next) => {
       });
     })
     .then((result) => {
+      transport
+        .sendMail({
+          to: req.body.email,
+          from: "yograjtandel9@gmail.com",
+          subject: "Greetings",
+          html: "welcome to Temp MF",
+        })
+        .then((res1) => {
+          console.log(res1);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
       res.status(201).json({ message: "User created!", userId: result._id });
     })
     .catch((err) => {
@@ -63,11 +85,12 @@ exports.login = (req, res, next) => {
         const token = {
           access: jwt.sign(
             { email: LoadedUser.email, userId: LoadedUser.id.toString() },
-            config.secret,
-            { expiresIn: config.jwtExpiration }
+            config.jwtConfig.secret,
+            { expiresIn: config.jwtConfig.jwtExpiration }
           ),
           refresh: refresh_tokn,
         };
+
         res.status(200).json({
           email: LoadedUser.email,
           token: token,
@@ -98,14 +121,14 @@ exports.UpdatePassword = (req, res, next) => {
 };
 
 exports.UpdateRefreshToken = (req, res, next) => {
-  RefreshToken.verifyExpiration(req.userId).then((valid) => {
-    if (valid) {
+  RefreshToken.verifyExpiration(req.userId).then((responce) => {
+    if (responce.validity) {
       Auth.findOne({ where: { id: req.userId } }).then((userDoc) => {
         const token = {
           access: jwt.sign(
             { email: userDoc.email, userId: userDoc.id.toString() },
-            config.secret,
-            { expiresIn: config.jwtExpiration }
+            config.jwtConfig.secret,
+            { expiresIn: config.jwtConfig.jwtExpiration }
           ),
           refresh: req.body.refresh,
         };

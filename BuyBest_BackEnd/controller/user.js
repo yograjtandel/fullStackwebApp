@@ -7,7 +7,10 @@ const KYCDetail = require("../models/kyc_detail");
 const Nominee = require("../models/nominee");
 
 exports.getUseList = (req, res) => {
-  KYCDetail.findAll()
+  Auth.findAll({
+    attributes: ["id", "email", "mobile"],
+    include: [User, Address, Bank, FatcaDetail, KYCDetail, Nominee],
+  })
     .then((data) => {
       if (!data) {
         const error = new Error("No user Found");
@@ -41,15 +44,23 @@ exports.CreateInvester = (req, res, next) => {
       state: req.body.correspondence_address.state,
       pincode: req.body.correspondence_address.pincode,
       country_ansi_code: "IN",
-    }).then((address) => userDoc.setAddress(address));
+    })
+      .then((address) => userDoc.setAddress(address))
+      .catch((err) => {
+        res.json({ err: err });
+      });
 
-    const bank_accounts = req.body.bank_accounts.map((bank_account) => {
+    req.body.bank_accounts.map((bank_account) => {
       return Bank.create({
         number: bank_account.number,
         primary_account: bank_account.primary_account,
         type: bank_account.type,
         ifsc_code: bank_account.ifsc_code,
-      }).then((bank) => userDoc.setBanks(bank));
+      })
+        .then((bank) => userDoc.setBanks(bank))
+        .catch((err) => {
+          res.json({ err: err });
+        });
     });
 
     FatcaDetail.create({
@@ -57,7 +68,11 @@ exports.CreateInvester = (req, res, next) => {
       no_other_tax_residences: true,
       source_of_wealth: req.body.fatca_detail.source_of_wealth,
       gross_annual_income: req.body.fatca_detail.gross_annual_income,
-    }).then((fatca_detail) => userDoc.setFatcaDetail(fatca_detail));
+    })
+      .then((fatca_detail) => userDoc.setFatcaDetail(fatca_detail))
+      .catch((err) => {
+        res.json({ err: err });
+      });
 
     KYCDetail.create({
       name: req.body.kyc_identity_detail.name,
@@ -70,73 +85,195 @@ exports.CreateInvester = (req, res, next) => {
       occupation: req.body.kyc_identity_detail.occupation,
       pep_exposed: req.body.kyc_identity_detail.pep_exposed,
       pep_related: req.body.kyc_identity_detail.pep_related,
-    }).then((kyc_detail) => userDoc.setKYCDetail(kyc_detail));
+    })
+      .then((kyc_detail) => userDoc.setKYCDetail(kyc_detail))
+      .catch((err) => {
+        res.json({ err: err });
+      });
 
-    const nomination = req.body.nomination.map((nominee) => {
+    req.body.nomination.map((nominee) => {
       Nominee.create({
         name: nominee.name,
         date_of_birth: nominee.date_of_birth,
         relationship: nominee.relationship,
         allocation_percentage: nominee.allocation_percentage,
-      }).then((nominee) => userDoc.setNominees(nominee));
+      })
+        .then((nominee) => userDoc.setNominees(nominee))
+        .catch((err) => {
+          res.json({ err: err });
+        });
     });
+
+    // https://fintechprimitives.com/docs/api/#create-an-investor
+    // commented out because demo Auth token provided by api provider is expierd
+
+    // fetch("https://s.finprim.com/api/onb/investors", {
+    //   method: "post",
+    //   body: JSON.stringify(req.body),
+    //   headers: {
+    //     "Content-Type": "Application/Json",
+    //     Authorization: config.jwtConfig.AUTHORIZATION,
+    //     "x-tenant-id": config.jwtConfig.XTENANTID,
+    //   },
+    // }).then(investor => {
+    //     investor.json().then(data => {
+    //         res.json({data: data,  message: "investor created successfully" });
+    //     })
+    // });
 
     res.json({ message: "investor created successfully" });
   });
 };
 
-exports.UpdateAddress = (req, res, next) => {
-  Auth.findOne({ where: { id: req.userId }, include: Address })
-    .then((doc) => {
-      return doc.Address.update(req.body);
-    })
-    .then((add) => {
-      res.json({ message: "Address is updated" });
-    });
-};
+// method Method to update record
+exports.UpdateInvestor = (req, res, next) => {
+  User.update(
+    {
+      perm_addr_is_corres_addr: req.body.perm_addr_is_corres_addr,
+      skip_nomination: req.body.skip_nomination,
+    },
+    {
+      where: {
+        authId: req.body.id,
+      },
+    }
+  ).then((res) => console.log(res));
 
-exports.UpdateBank = (req, res, next) => {
-  Auth.findOne({ where: { id: req.userId }, include: Bank })
-    .then((doc) => {
-      console.log(doc);
-      return doc.Banks[0].update(req.body.bank_detail, {
-        where: { id: req.body.bank_id },
+  Address.update(
+    {
+      line1: req.body.correspondence_address.line1,
+      city: req.body.correspondence_address.city,
+      state: req.body.correspondence_address.state,
+      pincode: req.body.correspondence_address.pincode,
+      country_ansi_code: "IN",
+    },
+    {
+      where: {
+        authId: req.body.id,
+      },
+    }
+  )
+    .then((res) => console.log(res))
+    .catch((err) => {
+      res.json({ err: err });
+    });
+
+  req.body.bank_accounts.map((bank_account) => {
+    return Bank.update(
+      {
+        number: bank_account.number,
+        primary_account: bank_account.primary_account,
+        type: bank_account.type,
+        ifsc_code: bank_account.ifsc_code,
+      },
+      {
+        where: {
+          id: bank_account.id,
+          authId: req.body.id,
+        },
+      }
+    )
+      .then((res) => console.log(res))
+      .catch((err) => {
+        res.json({ err: err });
       });
-    })
-    .then((add) => {
-      res.json({ message: "Bank is updated" });
-    });
-};
+  });
 
-exports.UpdateFatcaDetail = (req, res, next) => {
-  Auth.findOne({ where: { id: req.userId }, include: FatcaDetail })
-    .then((doc) => {
-      return doc.FatcaDetail.update(req.body);
-    })
-    .then((add) => {
-      res.json({ message: "FatcaDetail is FatcaDetail" });
+  FatcaDetail.update(
+    {
+      country_of_birth_ansi_code: "IN",
+      no_other_tax_residences: true,
+      source_of_wealth: req.body.fatca_detail.source_of_wealth,
+      gross_annual_income: req.body.fatca_detail.gross_annual_income,
+    },
+    {
+      where: {
+        authId: req.body.id,
+      },
+    }
+  )
+    .then((res) => console.log(res))
+    .catch((err) => {
+      res.json({ err: err });
     });
-};
 
-exports.UpdateKYCDetail = (req, res, next) => {
-  Auth.findOne({ where: { id: req.userId }, include: KYCDetail })
-    .then((doc) => {
-      return doc.KYCDetail.update(req.body);
-    })
-    .then((add) => {
-      res.json({ message: "KYCDetail is FatcaDetail" });
+  KYCDetail.update(
+    {
+      name: req.body.kyc_identity_detail.name,
+      pan_number: req.body.kyc_identity_detail.pan_number,
+      country_of_citizenship_ansi_code: "IN",
+      date_of_birth: req.body.kyc_identity_detail.date_of_birth,
+      gender: req.body.kyc_identity_detail.gender,
+      marital_status: req.body.kyc_identity_detail.marital_status,
+      residential_status: req.body.kyc_identity_detail.residential_status,
+      occupation: req.body.kyc_identity_detail.occupation,
+      pep_exposed: req.body.kyc_identity_detail.pep_exposed,
+      pep_related: req.body.kyc_identity_detail.pep_related,
+    },
+    {
+      where: {
+        authId: req.body.id,
+      },
+    }
+  )
+    .then((res) => console.log(res))
+    .catch((err) => {
+      res.json({ err: err });
     });
-};
 
-exports.UpdateNominee = (req, res, next) => {
-  Auth.findOne({ where: { id: req.userId }, include: Nominee })
-    .then((doc) => {
-      console.log(doc);
-      return doc.Nominees[0].update(req.body.nominee_detail, {
-        where: { id: req.body.nominee_id },
+  req.body.nomination.map((nominee) => {
+    Nominee.update(
+      {
+        name: nominee.name,
+        date_of_birth: nominee.date_of_birth,
+        relationship: nominee.relationship,
+        allocation_percentage: nominee.allocation_percentage,
+      },
+      {
+        where: {
+          id: nominee.id,
+          authId: req.body.id,
+        },
+      }
+    )
+      .then((res) => console.log(res))
+      .catch((err) => {
+        res.json({ err: err });
       });
-    })
-    .then((add) => {
-      res.json({ Nominee: "nominee is updated" });
+  });
+};
+
+// second Method to update record
+exports.UpdateInvestor_1 = (req, res, next) => {
+  Auth.findOne({
+    where: { id: req.userId },
+    include: [KYCDetail, FatcaDetail, Address, Bank, Nominee],
+  }).then((doc) => {
+    doc.KYCDetail.update(req.body.kyc_identity_detail);
+    doc.FatcaDetail.update(req.body.fatca_detail);
+    doc.Address.update(req.body.correspondence_address);
+    doc.Banks.forEach((bank) => {
+      bank.update(req.body.bank_accounts);
     });
+    doc.Nominees.forEach((nominee) => {
+      nominee.update(req.body.nomination);
+    });
+
+    // https://fintechprimitives.com/docs/api/#update-an-investor
+    // commented out because demo Auth token provided by api provider is expierd
+    // fetch(`https://s.finprim.com/api/onb/investors:${req.userId}`, {
+    //   method: "post",
+    //   body: JSON.stringify(req.body),
+    //   headers: {
+    //     "Content-Type": "Application/Json",
+    //     Authorization: config.jwtConfig.AUTHORIZATION,
+    //     "x-tenant-id": config.jwtConfig.XTENANTID,
+    //   },
+    // }).then((investor) => {
+    //   investor.json().then((data) => {
+    //     res.json({ data: data, message: "Investor is updated successfully" });
+    //   });
+    // });
+    res.json({ message: "Investor is updated successfully", data: doc });
+  });
 };

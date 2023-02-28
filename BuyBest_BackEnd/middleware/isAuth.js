@@ -15,7 +15,7 @@ module.exports = (req, res, next) => {
 
   let decodedToken;
   try {
-    decodedToken = jwt.verify(access, authConfig.secret);
+    decodedToken = jwt.verify(access, authConfig.jwtConfig.secret);
   } catch (err) {
     err.statusCode = 500;
     console.log("err=" + err);
@@ -27,14 +27,11 @@ module.exports = (req, res, next) => {
     error.statusCode = 401;
     throw error;
   }
-  RefreshToken.verifyExpiration(+decodedToken.userId).then((valid) => {
-    if (!valid) {
-      RefreshToken.findOne({ where: { token: refhresh } }).then((doc) => {
-        RefreshToken.destroy({ where: { id: doc.id } });
-        res.status(403).json({
-          message:
-            "Refresh token was expired. Please make a new signin request",
-        });
+  RefreshToken.verifyExpiration(+decodedToken.userId).then((responce) => {
+    if (!responce.validity) {
+      RefreshToken.destroy({ where: { id: responce.doc.id } });
+      res.status(403).json({
+        message: "Refresh token was expired. Please make a new signin request",
       });
     }
   });

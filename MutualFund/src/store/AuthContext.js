@@ -114,10 +114,8 @@ export const AuthContextProvider = (props) => {
       const token = localStorage.getItem("token");
       const email = localStorage.getItem("email");
       if (token) {
-        debugger;
         if (Loading) {
           const data = await updateToken(token);
-          debugger;
           if (data) {
             setToken(data);
             // setUser(jwt_decode(data.access));
@@ -127,7 +125,6 @@ export const AuthContextProvider = (props) => {
         } else {
           setToken(token);
           setEmail(email);
-          debugger;
           if (location.pathname !== RoutPath.Login) {
             navigate(location.pathname);
           } else {
