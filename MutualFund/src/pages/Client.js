@@ -1042,10 +1042,10 @@ const Client = () => {
           false,
           FormData
         );
-        
+
         if (putRes.ok) {
           const updated_record = await putRes.json();
-          debugger
+          debugger;
           formContext.setActiveRecord(updated_record.data);
           formContext.setActiveMode("read");
         } else {
