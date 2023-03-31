@@ -18,13 +18,13 @@ root.render(
   <React.StrictMode>
     <BrowserRouter>
       <BurgerMenuContextProvider>
-          <FormContextProvider>
-            {/* <ActiveFilterContextProvider> */}
-              <AuthContextProvider>
-                <App />
-              </AuthContextProvider>
-            {/* </ActiveFilterContextProvider> */}
-          </FormContextProvider>
+        <FormContextProvider>
+          {/* <ActiveFilterContextProvider> */}
+          <AuthContextProvider>
+            <App />
+          </AuthContextProvider>
+          {/* </ActiveFilterContextProvider> */}
+        </FormContextProvider>
       </BurgerMenuContextProvider>
     </BrowserRouter>
   </React.StrictMode>

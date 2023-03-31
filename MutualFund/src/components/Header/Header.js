@@ -44,7 +44,7 @@ const Header = (props) => {
               <NavBar data={props.data} />
               <li className="dropdown p-0 m-0 nav-item position-relative nav-item">
                 <a
-                  className="nav-link p-0 m-0 dropdown-toggle text-start bi bi-user-circle color-primary me-2 d-flex justify-content-center align-items-center"
+                  className="nav-link p-0 m-0 dropdown-toggle text-start bi bi-user-circle color-primary me-2 d-flex justify-content-md-start justify-content-sm-start align-items-center"
                   href="#"
                   role="button"
                   data-bs-toggle="dropdown"

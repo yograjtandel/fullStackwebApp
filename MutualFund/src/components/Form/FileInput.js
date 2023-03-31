@@ -44,7 +44,6 @@ const FileInput = (props) => {
             const data = utils.sheet_to_csv(ws, { header: 1 });
             /* Update state */
             result = data;
-            console.log("Data>>>" + data);
           };
           reader.readAsBinaryString(file);
         }

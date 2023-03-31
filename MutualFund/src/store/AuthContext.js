@@ -1,7 +1,7 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import useActions from "../hooks/use-actions";
+import Actions from "../hooks/useActions";
 
 import { RoutPath } from "../data/Paths";
 
@@ -28,7 +28,7 @@ export const AuthContextProvider = (props) => {
       const refreshToken = token
         ? JSON.parse(token).refresh
         : JSON.parse(Token).refresh;
-      let response = await useActions("post", RoutPath.RefreshToken, false, {
+      let response = await Actions("post", RoutPath.RefreshToken, false, {
         refresh: refreshToken,
       });
 
@@ -58,7 +58,7 @@ export const AuthContextProvider = (props) => {
   const onLogin = async (email, password) => {
     if (email && password) {
       try {
-        const res = await useActions("post", RoutPath.LoginApi, false, {
+        const res = await Actions("post", RoutPath.LoginApi, false, {
           email: email,
           password: password,
         });
@@ -97,7 +97,6 @@ export const AuthContextProvider = (props) => {
 
     let interval = setInterval(
       async () => {
-        console.log("timeout call");
         if (Token) {
           const data = await updateToken();
           if (data) {

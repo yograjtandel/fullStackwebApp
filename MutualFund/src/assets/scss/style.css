@@ -1287,6 +1287,7 @@ fieldset:disabled .multiple-bank-btn {
   box-shadow: 0 0 1.25rem rgba(115, 105, 215, 0.1);
   border: 0.063rem solid #d0d0d0;
   padding: 0.938rem !important;
+  margin-top: 1rem;
   background-color: #f9f9fb !important;
   z-index: 99;
   min-height: calc(100% - 25vh);
@@ -4262,7 +4263,8 @@ ul.sub-menu {
   box-shadow: 0.625rem 0.625rem 3.125rem rgba(0, 0, 0, 0.05);
   width: 18.75em;
   position: absolute;
-  min-width: 13.75rem;
+  min-width: 11.75rem;
+  max-width: 12.75rem;
   height: -webkit-max-content;
   height: -moz-max-content;
   height: max-content;

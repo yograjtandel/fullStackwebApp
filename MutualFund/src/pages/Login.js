@@ -1,11 +1,11 @@
 import React, { useContext, useState } from "react";
+import uuid from "react-uuid";
 import { Link, useNavigate } from "react-router-dom";
 
 import Logo from "../assets/web-asset/images/login-logo-2.png";
 import AuthContext from "../store/AuthContext";
-import UseNotificationManager from "../hooks/use-notification-manager";
+import UseNotificationManager from "../hooks/UseNotificationManager";
 import { RoutPath } from "../data/Paths";
-
 
 const Login = () => {
   const AuthCtx = useContext(AuthContext);
@@ -30,9 +30,8 @@ const Login = () => {
 
     if (res >= 400) {
       setNotificationList((prev) => [
-        ...prev,
-        
-        { msg: "Something went wrong..........!" },
+        ...prev, 
+        { id: uuid(), msg: "Something went wrong..........!" },
       ]);
     }
   };
@@ -114,7 +113,10 @@ const Login = () => {
                 <div className="col-md-12 mt-3 mb-3">
                   <label className="credentail-link">
                     Not Registered?{" "}
-                    <Link to={`../${RoutPath.SignUp}`} className="credential-link">
+                    <Link
+                      to={`../${RoutPath.SignUp}`}
+                      className="credential-link"
+                    >
                       Create Your Account
                     </Link>
                   </label>

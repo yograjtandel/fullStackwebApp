@@ -1,6 +1,6 @@
 import { EndPoint } from "../data/EndPoint";
 
-const useActions = async (action, model, ids, data, queryParams) => {
+async function Actions(action, model, ids, data, queryParams) {
   // const AuthCtx = useContext(AuthContext);
   // const useActions = async (args) => {
   const keys = ids ? "/" + ids : "";
@@ -20,7 +20,7 @@ const useActions = async (action, model, ids, data, queryParams) => {
   }
 
   if (parems) {
-    url = url + "/" + parems;
+    url = url + "/?" + parems;
   }
 
   if (!keys && !parems) {
@@ -110,6 +110,6 @@ const useActions = async (action, model, ids, data, queryParams) => {
     default:
       responce = false;
   }
-};
+}
 
-export default useActions;
+export default Actions;

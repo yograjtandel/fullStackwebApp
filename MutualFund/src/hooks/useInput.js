@@ -2,7 +2,7 @@ import { useState } from "react";
 
 import { DigitOnlyValidation } from "../components/Form/validations/validations";
 // const useInput = (args.defaultValue, args.validateValue, args.fetch, args.DisplayErrorMsg, args.maxLen) => {
-const useInput = (args) => {
+function useInput (args) {
   const [inputValue, setInputValue] = useState(args.defaultValue);
   const [IsTouched, setIsTouched] = useState(false);
   const valueIsValid =
@@ -11,8 +11,6 @@ const useInput = (args) => {
       : true;
   const hasError = !valueIsValid && IsTouched;
   const valueChangeHandler = (event) => {
-    console.log("event==========");
-    console.log(event);
     setIsTouched(true);
     if (event) {
       if (event.target) {

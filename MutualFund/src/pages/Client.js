@@ -3,10 +3,10 @@ import uuid from "react-uuid";
 import Selection from "../components/Form/Selection";
 import BreadCrum from "../components/UI/BreadCrum";
 
-import useInput from "../hooks/use-Input";
-import usePanVarify from "../hooks/use-pan-varify";
-import UseNotificationManager from "../hooks/use-notification-manager";
-import useActions from "../hooks/use-actions";
+import useInput from "../hooks/useInput";
+import PanVarify from "../hooks/PanVarify";
+import UseNotificationManager from "../hooks/UseNotificationManager";
+import Actions from "../hooks/useActions";
 
 import {
   AccountTypeList,
@@ -279,11 +279,6 @@ const Client = () => {
   } = useInput({
     defaultValue: { value: "0", label: "Gender" },
     validateValue: (value) => {
-      console.log("value==", value);
-      console.log(
-        "requerSelectionValidation(value)==",
-        requerSelectionValidation(value)
-      );
       return requerSelectionValidation(value);
     },
   });
@@ -418,7 +413,7 @@ const Client = () => {
   const varifyPanClickHandler = async () => {
     const pan = Pan;
     const ValidPan = PanIsvalid;
-    const res = await usePanVarify(pan);
+    const res = await PanVarify(pan);
 
     // remove this section after provide valid api
     setPanData(true);
@@ -514,6 +509,11 @@ const Client = () => {
   //     validateValue: requerSelectionValidation,
   //   });
 
+  const fetchBankDetail = async (value) => {
+    const res = await fetch("https://ifsc.razorpay.com/" + value);
+    const data = await res.json();
+  };
+
   const {
     inputValue: IFSC,
     isvalid: IFSCIsvalid,
@@ -527,11 +527,6 @@ const Client = () => {
     validateValue: (value) => requerFieldValidation(value),
     BlureAction: fetchBankDetail,
   });
-
-  const fetchBankDetail = async (value) => {
-    const res = await fetch("https://ifsc.razorpay.com/" + value);
-    const data = await res.json();
-  };
 
   const EditBankAcNumberClickHandler = () => {
     setEditBankAcNo(true);
@@ -906,14 +901,6 @@ const Client = () => {
       //     pep_related: false,
       true;
 
-  //   console.log("firstName=", firstName);
-  //   console.log("PanData=", PanData);
-  //   console.log("PanIsvalid=", PanIsvalid);
-  //   console.log("DOBIsvalid=", DOBIsvalid);
-  //   console.log("genderIsvalid=", genderIsvalid);
-  //   console.log("statusIsvalid=", statusIsvalid);
-  //   console.log("OccupationIsvalid=", OccupationIsvalid);
-
   const tab2IsValid = !read
     ? SourceofWealthIsvalid && GrossAnnualIncomeIsvalid
     : true;
@@ -1015,7 +1002,7 @@ const Client = () => {
         nomination: nomineeList,
       };
       if (create) {
-        const CreateRes = await useActions(
+        const CreateRes = await Actions(
           "post",
           "user/create_investor",
           false,
@@ -1036,7 +1023,7 @@ const Client = () => {
       //   }));
       if (edit) {
         FormData["id"] = formContext.Activerecord.id;
-        const putRes = await useActions(
+        const putRes = await Actions(
           "put",
           "user/update_investor",
           false,
@@ -1045,7 +1032,6 @@ const Client = () => {
 
         if (putRes.ok) {
           const updated_record = await putRes.json();
-          debugger;
           formContext.setActiveRecord(updated_record.data);
           formContext.setActiveMode("read");
         } else {

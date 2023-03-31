@@ -6,26 +6,12 @@ const Pagination = (props) => {
   const [RecordSkiped, setRecordSkiped] = useState(0);
   const [start, setstart] = useState(1);
   const [end, setend] = useState(0);
+  const [limit, setLimit] = useState(2);
   const no_of_page = props.Pagination.count;
   const page_size = props.Pagination.page_size;
 
   const calculateRange = () => {
     if (no_of_page) {
-      //   let start_range = (+curentPage - 1) * page_size + 1;
-      // //   let start_range = curentPage;
-      //   let end_range = start_range;
-      //   setstart(start_range);
-      //   setend(end_range);
-
-      //   if (page_size < no_of_page) {
-      //     end_range = page_size * +curentPage;
-      //     setend(end_range);
-      //     if (end_range > no_of_page) {
-      //       end_range = no_of_page;
-      //       setend(end_range);
-      //     }
-      //   }
-      //   setrangeInputValue(start_range + " - " + end_range);
       setstart(start);
       setend(+page_size + +start - 1);
       setrangeInputValue(
@@ -35,41 +21,38 @@ const Pagination = (props) => {
             : +page_size + +start - 1
         }`
       );
-      //   setrangeInputValue(`${start} -  ${(+page_size + +start - 1)  > no_of_page ? no_of_page : (+page_size + +start - 1) }`);
-      //   setrangeInputValue(`${start} - ${(+page_size + +start - 1) }`);
     }
   };
   useEffect(() => {
     calculateRange();
   }, [props]);
 
-  const getList = (url) => {
-    let qryparems = url.searchParams;
-    let page = qryparems.get("page");
-    if (!page) {
-      page = 1;
-    }
-    setcurentPage(page);
-    props.fetchUserList(url.search);
+  const getList = (page, start_offset, end_offset) => {
+    props.fetchUserList(
+      `page=${page}&limit=${limit}&range=${start_offset},${end_offset}`
+    );
   };
   const nextHandler = () => {
     if (props.Pagination.next) {
-      setstart(end + 1);
-      setend(end + 1 + page_size < no_of_page ? end + page_size : no_of_page);
+      const start_offset = end + 1;
+      const end_offset =
+        end + 1 + page_size - 1 < no_of_page ? end + page_size : no_of_page;
+      setstart(start_offset);
+      setend(end_offset);
       if (props.Pagination.next) {
-        const url = new URL(props.Pagination.next);
-        getList(url);
+        getList(props.Pagination.next, start_offset, end_offset);
       }
     }
   };
 
   const previousHandler = () => {
     if (props.Pagination.previous) {
-      setstart(start - page_size);
-      setend(start - 1);
+      const start_offset = start - page_size;
+      const end_offset = start - 1;
+      setstart(start_offset);
+      setend(end_offset);
       if (props.Pagination.previous) {
-        const url = new URL(props.Pagination.previous);
-        getList(url);
+        getList(props.Pagination.previous, start_offset, end_offset);
       }
     }
   };
@@ -79,10 +62,12 @@ const Pagination = (props) => {
   const rangeSubmit = (event) => {
     event.preventDefault();
     const value = rangeInputValue;
+    const start_offset = value.split("-")[0].trim();
+    const end_offset = value.split("-")[1].trim();
     if (value.includes("-")) {
-      setRecordSkiped(+value.split("-")[0] - 1);
-      setstart(value.split("-")[0]);
-      setend(value.split("-")[1]);
+      setRecordSkiped(+start_offset - 1);
+      setstart(start_offset);
+      setend(end_offset);
     } else if (value.includes(",")) {
       setRecordSkiped(+value.split(",")[0] - 1);
       setstart(value.split(",")[0]);
@@ -92,9 +77,11 @@ const Pagination = (props) => {
       setstart(start);
       setend(end);
     }
-    // setcurentPage(value.split("-")[0].trim())
+    setLimit(+end_offset - +start_offset + 1);
     props.fetchUserList(
-      `?range=${value.split("-")[0].trim()},${value.split("-")[1].trim()}`
+      `range=${start_offset},${end_offset}&limit=${
+        +end_offset - +start_offset + 1
+      }`
     );
   };
   return (
@@ -115,7 +102,8 @@ const Pagination = (props) => {
                   name="start"
                   value={rangeInputValue}
                 />{" "}
-                /{no_of_page + RecordSkiped}
+                /{no_of_page}
+                {/* /{no_of_page + RecordSkiped} */}
               </form>
             </span>
           </li>
@@ -145,7 +133,7 @@ const Pagination = (props) => {
             className="nav-item dropdown pagination-dropdown px-2"
             //   onClick={recordRangeClickHandler}
           >
-            <select >
+            <select>
               <option value={50}>1-50</option>
               <option value={25}>1-25</option>
               <option value={100}>1-100</option>

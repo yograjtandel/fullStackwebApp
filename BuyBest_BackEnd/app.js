@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const authRoutes = require("./routes/auth");
 const userRoutes = require("./routes/user");
+const mfRoutes = require("./routes/MFData");
 
 const sequelize = require("./util/database");
 
@@ -13,6 +14,8 @@ const KYCDetail = require("./models/kyc_detail");
 const Nominee = require("./models/nominee");
 const User = require("./models/user");
 const RefreshToken = require("./models/refreshToken");
+const AMC = require("./models/AMC");
+const Funds = require("./models/funds");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -29,6 +32,7 @@ app.use((req, res, next) => {
 });
 app.use("/auth", authRoutes);
 app.use("/user", userRoutes);
+app.use("/mf", mfRoutes);
 
 app.use((error, req, res, next) => {
   const status = error.statusCode || 500;
@@ -51,6 +55,8 @@ Auth.hasOne(KYCDetail);
 KYCDetail.belongsTo(Auth);
 Auth.hasMany(Nominee);
 Nominee.belongsTo(Auth);
+AMC.hasOne(Funds);
+Funds.belongsTo(AMC);
 
 sequelize
   .sync()

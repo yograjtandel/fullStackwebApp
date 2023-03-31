@@ -4,7 +4,6 @@ import FormContext from '../../store/FormContext'
 
 const Card = (props) => {
   const ctx = useContext(FormContext);
-  // console.log("ctx.ActiveMode=",ctx.mode)
   return (
     <div
       className={`card-spacing d-flex justify-content-center ${props.className}`}

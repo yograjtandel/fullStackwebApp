@@ -10,7 +10,7 @@ const ActionConreoller = (props) => {
   const [GroupByDropdownOpen, setGroupByDropdownOpen] = useState(false);
 
   const ActionClickHandler = (event) => {
-    event.stopPropagation();    
+    event.stopPropagation();
     setFilterDropdownOpen(false);
     setGroupByDropdownOpen(false);
     setActionDropdownOpen((prev) => !prev);
@@ -34,13 +34,15 @@ const ActionConreoller = (props) => {
     <>
       <div className="w-100 row d-flex justify-content-between flex-wrap filter-wrapper py-2 m-0  pt-0 ">
         <div className="mb-0 p-1 col-md-3 col-sm-12">
-          <input
-            type="search"
-            className={`form-control`}
-            id="search_funds"
-            placeholder="Search"
-            aria-label="Search"
-          />
+          {props.Search && (
+            <input
+              type="search"
+              className={`form-control`}
+              id="search_funds"
+              placeholder="Search"
+              aria-label="Search"
+            />
+          )}
         </div>
         <div className="action-wrapper col-md-9 col-sm-12 d-flex justify-content-md-end mb-0 col-sm-12">
           <ul className="nav flex-row mb-0">

@@ -1,11 +1,12 @@
 import React, { useState } from "react";
+import uuid from "react-uuid";
 import { Link, useNavigate } from "react-router-dom";
 
 import Logo from "../assets/web-asset/images/login-logo-2.png";
-import UseNotificationManager from "../hooks/use-notification-manager";
+import UseNotificationManager from "../hooks/UseNotificationManager";
 import { RoutPath } from "../data/Paths";
 
-import useActions from "../hooks/use-actions";
+import Actions from "../hooks/useActions";
 
 const SignUp = () => {
   const [NotificationList, setNotificationList] = useState([]);
@@ -22,7 +23,7 @@ const SignUp = () => {
 
   const OnSignup = async (event) => {
     event.preventDefault();
-    const res = await useActions("post", "auth/signup", false, {
+    const res = await Actions("post", "auth/signup", false, {
       user_name: event.target.user_name.value,
       email: event.target.email.value,
       mobile: event.target.mobile.value,
@@ -36,7 +37,7 @@ const SignUp = () => {
     if (res >= 400) {
       setNotificationList((prev) => [
         ...prev,
-        { msg: "Something went wrong..........!" },
+        { id: uuid(), msg: "Something went wrong..........!" },
       ]);
     }
     else {

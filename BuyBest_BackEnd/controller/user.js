@@ -7,9 +7,15 @@ const KYCDetail = require("../models/kyc_detail");
 const Nominee = require("../models/nominee");
 
 exports.getUseList = (req, res) => {
-  Auth.findAll({
+  const curt_page = +req.query.page || 1;
+  const range = req.query.range ? req.query.range.split(",") : false;
+  const ITEMS_PER_PAGE = req.query.limit ? +req.query.limit : 2;
+  const offset = range ? +range[0] - 1 : (curt_page - 1) * ITEMS_PER_PAGE;
+  Auth.findAndCountAll({
     attributes: ["id", "email", "mobile"],
     include: [User, Address, Bank, FatcaDetail, KYCDetail, Nominee],
+    offset: offset,
+    limit: ITEMS_PER_PAGE,
   })
     .then((data) => {
       if (!data) {
@@ -17,7 +23,20 @@ exports.getUseList = (req, res) => {
         error.statusCode = 404;
         throw error;
       }
-      res.json({ users: data });
+      const count = data.count;
+      const total_pages = Math.ceil(count / ITEMS_PER_PAGE);
+      res.json({
+        users: data.rows,
+        count: count,
+        next:
+          !range && curt_page < total_pages
+            ? curt_page + 1
+            : +range[0] < +data.count && +range[1] < +data.count
+            ? curt_page + 1
+            : false,
+        previous: curt_page > 1 ? curt_page - 1 : false,
+        page_size: ITEMS_PER_PAGE,
+      });
     })
     .catch((err) => {
       console.log(err);
